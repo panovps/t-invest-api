@@ -228,4 +228,4 @@ DEBUG=tinkoff-invest-api:* node robot.js
 ```
 
 ## Лицензия
-MIT @ [Vitaliy Potapov](https://github.com/vitalets)
+MIT

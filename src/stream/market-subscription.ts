@@ -48,6 +48,15 @@ export type UniversalMarketResponse<S, D> = {
   dataKey?: string;
 }
 
+export class TSubscriptionError extends Error {
+  public figis: string[];
+
+  constructor(message: string, figis: string[]) {
+    super(message);
+    this.figis = figis;
+  }
+}
+
 export class MarketSubscription<S extends ResponseSubscription, D extends ResponseData> {
   protected waitingStatusResolve?: () => unknown;
   protected waitingStatusReject?: (error: Error) => unknown;
@@ -102,10 +111,11 @@ export class MarketSubscription<S extends ResponseSubscription, D extends Respon
 
   protected buildSubscriptionError(errorSubscriptions: S[], trackingId?: string) {
     const lines = errorSubscriptions.map(s => `${s.figi}: status ${s.subscriptionStatus}`);
-    return new Error([
+    const figis = errorSubscriptions.map(s => s.figi);
+    return new TSubscriptionError([
       'Subscription error:',
       ...lines,
       `TrackingId: ${trackingId}`,
-    ].join('\n'));
+    ].join('\n'), figis);
   }
 }
