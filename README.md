@@ -1,8 +1,8 @@
 # t-invest-api
 
-Клон [tinkoff-invest-api](https://github.com/vitalets/tinkoff-invest-api) с обновленным API T-Invest Api
+Клон [t-invest-api](https://github.com/vitalets/tinkoff-invest-api) с обновленным API T-Invest Api
 
-# tinkoff-invest-api
+# t-invest-api
 Node.js SDK для работы с [T Invest API](https://github.com/RussianInvestments/investAPI/).
 
 <!-- toc -->
@@ -22,13 +22,13 @@ Node.js SDK для работы с [T Invest API](https://github.com/RussianInve
 
 ## Установка
 ```
-npm i tinkoff-invest-api
+npm i t-invest-api
 ```
 
 ## Использование
 ### Подключение
 ```ts
-import { TinkoffInvestApi } from 'tinkoff-invest-api';
+import { TinkoffInvestApi } from 't-invest-api';
 
 // создать клиента с заданным токеном доступа
 const api = new TinkoffInvestApi({ token: '<your-token>' });
@@ -37,8 +37,8 @@ const api = new TinkoffInvestApi({ token: '<your-token>' });
 
 ### Unary-запросы
 ```ts
-import { PortfolioRequest_CurrencyRequest } from 'tinkoff-invest-api/dist/generated/operations.js';
-import { CandleInterval } from 'tinkoff-invest-api/dist/generated/marketdata.js';
+import { PortfolioRequest_CurrencyRequest } from 't-invest-api/dist/generated/operations.js';
+import { CandleInterval } from 't-invest-api/dist/generated/marketdata.js';
 
 // получить список счетов
 const { accounts } = await api.users.getAccounts({});
@@ -61,7 +61,7 @@ const { candles } = await api.marketdata.getCandles({
 ### Стримы
 Для работы со стримом сделана обертка `api.stream`:
 ```ts
-import { SubscriptionInterval } from 'tinkoff-invest-api/dist/generated/marketdata.js';
+import { SubscriptionInterval } from 't-invest-api/dist/generated/marketdata.js';
 
 // подписка на свечи
 const unsubscribe = await api.stream.market.candles({
@@ -103,8 +103,8 @@ await api.stream.market.cancel();
 Для бесшовной работы со счетами в бою и песочнице сделан универсальный интерфейс `TinkoffAccount`.
 
 ```ts
-import { TinkoffAccount, RealAccount, SandboxAccount } from 'tinkoff-invest-api';
-import { OrderDirection, OrderType } from 'tinkoff-invest-api/dist/generated/orders.js';
+import { TinkoffAccount, RealAccount, SandboxAccount } from 't-invest-api';
+import { OrderDirection, OrderType } from 't-invest-api/dist/generated/orders.js';
 
 // создать экземпляр счета: боевого или в песочнице
 const account: TinkoffAccount = process.env.USE_REAL_ACCOUNT
@@ -133,8 +133,8 @@ const order = await account.postOrder({
 ### Кеширование свечей
 Кеширование свечей позволяет сократить кол-во запросов к API, а также удобно получать нужное кол-во свечей за любой период времени (в исходном API есть ограничения на диапазоны дат запроса). Для загрузки свечей с учетом кеша используется класс `CandlesLoader`:
 ```ts
-import { TinkoffInvestApi, CandlesLoader } from 'tinkoff-invest-api';
-import { CandleInterval } from 'tinkoff-invest-api/dist/generated/marketdata.js';
+import { TinkoffInvestApi, CandlesLoader } from 't-invest-api';
+import { CandleInterval } from 't-invest-api/dist/generated/marketdata.js';
 
 const api = new TinkoffInvestApi({ token: '<your-token>' });
 
@@ -179,7 +179,7 @@ const { candles } = await candlesLoader.getCandles({
 ### Хелперы
 Для более удобной работы есть несколько хелперов:
 ```ts
-import { Helpers } from 'tinkoff-invest-api';
+import { Helpers } from 't-invest-api';
 
 /**
  * Переводит число в Quotation.
@@ -224,7 +224,7 @@ Helpers.toHuman<T extends Enums>(value: T, values: getEnumType<T>): string;
 Чтобы вывести отладочную информацию, нужно указать переменную окружения `DEBUG`:
 
 ```
-DEBUG=tinkoff-invest-api:* node robot.js
+DEBUG=t-invest-api:* node robot.js
 ```
 
 ## Лицензия

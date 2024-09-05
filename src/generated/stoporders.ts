@@ -9,11 +9,11 @@ export const protobufPackage = "tinkoff.public.invest.api.contract.v1";
 
 /** Направление сделки стоп-заявки. */
 export enum StopOrderDirection {
-  /** STOP_ORDER_DIRECTION_UNSPECIFIED - Значение не указано */
+  /** STOP_ORDER_DIRECTION_UNSPECIFIED - Значение не указано. */
   STOP_ORDER_DIRECTION_UNSPECIFIED = 0,
-  /** STOP_ORDER_DIRECTION_BUY - Покупка */
+  /** STOP_ORDER_DIRECTION_BUY - Покупка. */
   STOP_ORDER_DIRECTION_BUY = 1,
-  /** STOP_ORDER_DIRECTION_SELL - Продажа */
+  /** STOP_ORDER_DIRECTION_SELL - Продажа. */
   STOP_ORDER_DIRECTION_SELL = 2,
   UNRECOGNIZED = -1,
 }
@@ -52,11 +52,11 @@ export function stopOrderDirectionToJSON(object: StopOrderDirection): string {
 
 /** Тип экспирации стоп-заявке. */
 export enum StopOrderExpirationType {
-  /** STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED - Значение не указано */
+  /** STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED - Значение не указано. */
   STOP_ORDER_EXPIRATION_TYPE_UNSPECIFIED = 0,
-  /** STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL - Действительно до отмены */
+  /** STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL - Действительно до отмены. */
   STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_CANCEL = 1,
-  /** STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE - Действительно до даты снятия */
+  /** STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE - Действительно до даты снятия. */
   STOP_ORDER_EXPIRATION_TYPE_GOOD_TILL_DATE = 2,
   UNRECOGNIZED = -1,
 }
@@ -95,13 +95,13 @@ export function stopOrderExpirationTypeToJSON(object: StopOrderExpirationType): 
 
 /** Тип стоп-заявки. */
 export enum StopOrderType {
-  /** STOP_ORDER_TYPE_UNSPECIFIED - Значение не указано */
+  /** STOP_ORDER_TYPE_UNSPECIFIED - Значение не указано. */
   STOP_ORDER_TYPE_UNSPECIFIED = 0,
-  /** STOP_ORDER_TYPE_TAKE_PROFIT - Take-profit заявка */
+  /** STOP_ORDER_TYPE_TAKE_PROFIT - `Take-profit`-заявка. */
   STOP_ORDER_TYPE_TAKE_PROFIT = 1,
-  /** STOP_ORDER_TYPE_STOP_LOSS - Stop-loss заявка */
+  /** STOP_ORDER_TYPE_STOP_LOSS - `Stop-loss`-заявка. */
   STOP_ORDER_TYPE_STOP_LOSS = 2,
-  /** STOP_ORDER_TYPE_STOP_LIMIT - Stop-limit заявка */
+  /** STOP_ORDER_TYPE_STOP_LIMIT - `Stop-limit`-заявка. */
   STOP_ORDER_TYPE_STOP_LIMIT = 3,
   UNRECOGNIZED = -1,
 }
@@ -145,17 +145,17 @@ export function stopOrderTypeToJSON(object: StopOrderType): string {
 
 /** Статус стоп-заяки. */
 export enum StopOrderStatusOption {
-  /** STOP_ORDER_STATUS_UNSPECIFIED - Значение не указано */
+  /** STOP_ORDER_STATUS_UNSPECIFIED - Значение не указано. */
   STOP_ORDER_STATUS_UNSPECIFIED = 0,
-  /** STOP_ORDER_STATUS_ALL - Все заявки */
+  /** STOP_ORDER_STATUS_ALL - Все заявки. */
   STOP_ORDER_STATUS_ALL = 1,
-  /** STOP_ORDER_STATUS_ACTIVE - Активные заявки */
+  /** STOP_ORDER_STATUS_ACTIVE - Активные заявки. */
   STOP_ORDER_STATUS_ACTIVE = 2,
-  /** STOP_ORDER_STATUS_EXECUTED - Исполненные заявки */
+  /** STOP_ORDER_STATUS_EXECUTED - Исполненные заявки. */
   STOP_ORDER_STATUS_EXECUTED = 3,
-  /** STOP_ORDER_STATUS_CANCELED - Отмененные заявки */
+  /** STOP_ORDER_STATUS_CANCELED - Отменённые заявки. */
   STOP_ORDER_STATUS_CANCELED = 4,
-  /** STOP_ORDER_STATUS_EXPIRED - Истекшие заявки */
+  /** STOP_ORDER_STATUS_EXPIRED - Истёкшие заявки. */
   STOP_ORDER_STATUS_EXPIRED = 5,
   UNRECOGNIZED = -1,
 }
@@ -209,11 +209,11 @@ export function stopOrderStatusOptionToJSON(object: StopOrderStatusOption): stri
 
 /** Тип выставляемой заявки. */
 export enum ExchangeOrderType {
-  /** EXCHANGE_ORDER_TYPE_UNSPECIFIED - Значение не указано */
+  /** EXCHANGE_ORDER_TYPE_UNSPECIFIED - Значение не указано. */
   EXCHANGE_ORDER_TYPE_UNSPECIFIED = 0,
-  /** EXCHANGE_ORDER_TYPE_MARKET - Заявка по рыночной цене */
+  /** EXCHANGE_ORDER_TYPE_MARKET - Заявка по рыночной цене. */
   EXCHANGE_ORDER_TYPE_MARKET = 1,
-  /** EXCHANGE_ORDER_TYPE_LIMIT - Лимитная заявка */
+  /** EXCHANGE_ORDER_TYPE_LIMIT - Лимитная заявка. */
   EXCHANGE_ORDER_TYPE_LIMIT = 2,
   UNRECOGNIZED = -1,
 }
@@ -250,13 +250,13 @@ export function exchangeOrderTypeToJSON(object: ExchangeOrderType): string {
   }
 }
 
-/** Тип TakeProfit заявки. */
+/** Тип TakeProfit-заявки. */
 export enum TakeProfitType {
-  /** TAKE_PROFIT_TYPE_UNSPECIFIED - Значение не указано */
+  /** TAKE_PROFIT_TYPE_UNSPECIFIED - Значение не указано. */
   TAKE_PROFIT_TYPE_UNSPECIFIED = 0,
-  /** TAKE_PROFIT_TYPE_REGULAR - Обычная заявка (значение по умолчанию) */
+  /** TAKE_PROFIT_TYPE_REGULAR - Обычная заявка, значение по умолчанию. */
   TAKE_PROFIT_TYPE_REGULAR = 1,
-  /** TAKE_PROFIT_TYPE_TRAILING - Трейлинг-стоп */
+  /** TAKE_PROFIT_TYPE_TRAILING - Трейлинг-стоп. */
   TAKE_PROFIT_TYPE_TRAILING = 2,
   UNRECOGNIZED = -1,
 }
@@ -293,13 +293,13 @@ export function takeProfitTypeToJSON(object: TakeProfitType): string {
   }
 }
 
-/** Тип параметров значений Трейлинг-стопа */
+/** Тип параметров значений трейлинг-стопа. */
 export enum TrailingValueType {
-  /** TRAILING_VALUE_UNSPECIFIED - Значение не указано */
+  /** TRAILING_VALUE_UNSPECIFIED - Значение не указано. */
   TRAILING_VALUE_UNSPECIFIED = 0,
-  /** TRAILING_VALUE_ABSOLUTE - Абсолютное значение в единицах цены */
+  /** TRAILING_VALUE_ABSOLUTE - Абсолютное значение в единицах цены. */
   TRAILING_VALUE_ABSOLUTE = 1,
-  /** TRAILING_VALUE_RELATIVE - Относительное значение в процентах */
+  /** TRAILING_VALUE_RELATIVE - Относительное значение в процентах. */
   TRAILING_VALUE_RELATIVE = 2,
   UNRECOGNIZED = -1,
 }
@@ -336,13 +336,13 @@ export function trailingValueTypeToJSON(object: TrailingValueType): string {
   }
 }
 
-/** Статус Трейлинг-стопа */
+/** Статус трейлинг-стопа. */
 export enum TrailingStopStatus {
-  /** TRAILING_STOP_UNSPECIFIED - Значение не указано */
+  /** TRAILING_STOP_UNSPECIFIED - Значение не указано. */
   TRAILING_STOP_UNSPECIFIED = 0,
-  /** TRAILING_STOP_ACTIVE - Активный */
+  /** TRAILING_STOP_ACTIVE - Активный. */
   TRAILING_STOP_ACTIVE = 1,
-  /** TRAILING_STOP_ACTIVATED - Активированный */
+  /** TRAILING_STOP_ACTIVATED - Активированный. */
   TRAILING_STOP_ACTIVATED = 2,
   UNRECOGNIZED = -1,
 }
@@ -382,178 +382,180 @@ export function trailingStopStatusToJSON(object: TrailingStopStatus): string {
 /** Запрос выставления стоп-заявки. */
 export interface PostStopOrderRequest {
   /**
-   * Deprecated Figi-идентификатор инструмента. Необходимо использовать instrument_id.
+   * Deprecated FIGI-идентификатор инструмента. Используйте `instrument_id`.
    *
    * @deprecated
    */
   figi?:
     | string
     | undefined;
-  /** Количество лотов */
+  /** Количество лотов. */
   quantity: number;
-  /** Цена за 1 инструмент. Для получения стоимости лота требуется умножить на лотность инструмента. */
+  /** Цена за 1 инструмент биржевой заявки, которая будет выставлена при срабатывании по достижению `stop_price`. Чтобы получить стоимость лота, нужно умножить на лотность инструмента. */
   price?:
     | Quotation
     | undefined;
-  /** Стоп-цена заявки за 1 инструмент. Для получения стоимости лота требуется умножить на лотность инструмента. */
+  /** Стоп-цена заявки за 1 инструмент. При достижении стоп-цены происходит активация стоп-заявки, в результате чего выставляется биржевая заявка. Чтобы получить стоимость лота, нужно умножить на лотность инструмента. */
   stopPrice?:
     | Quotation
     | undefined;
-  /** Направление операции */
+  /** Направление операции. */
   direction: StopOrderDirection;
-  /** Номер счёта */
+  /** Номер счёта. */
   accountId: string;
-  /** Тип экспирации заявки */
+  /** Тип экспирации заявки. */
   expirationType: StopOrderExpirationType;
-  /** Тип заявки */
+  /** Тип заявки. */
   stopOrderType: StopOrderType;
-  /** Дата и время окончания действия стоп-заявки в часовом поясе UTC. **Для ExpirationType = GoodTillDate заполнение обязательно, для GoodTillCancel игнорируется**. */
+  /** Дата и время окончания действия стоп-заявки по UTC. Для `ExpirationType = GoodTillDate` заполнение обязательно, для `GoodTillCancel` игнорируется. */
   expireDate?:
     | Date
     | undefined;
-  /** Идентификатор инструмента, принимает значения Figi или instrument_uid. */
+  /** Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`. */
   instrumentId: string;
-  /** Тип дочерней биржевой заявки для тейкпрофита */
+  /** Тип дочерней биржевой заявки для тейкпрофита. */
   exchangeOrderType: ExchangeOrderType;
-  /** Подтип стоп-заявки TakeProfit */
+  /** Подтип стоп-заявки — `TakeProfit`. */
   takeProfitType: TakeProfitType;
-  /** Массив с параметрами трейлинг-стопа */
+  /** Массив с параметрами трейлинг-стопа. */
   trailingData?:
     | PostStopOrderRequest_TrailingData
     | undefined;
-  /** Тип цены */
+  /** Тип цены. */
   priceType: PriceType;
-  /** Идентификатор запроса выставления поручения для целей идемпотентности в формате UID. Максимальная длина 36 символов. */
+  /** Идентификатор запроса выставления поручения для целей идемпотентности в формате `UID`. Максимальная длина — 36 символов. */
   orderId: string;
 }
 
 export interface PostStopOrderRequest_TrailingData {
-  /** Отступ */
+  /** Отступ. */
   indent?:
     | Quotation
     | undefined;
-  /** Тип величины отступа */
+  /** Тип величины отступа. */
   indentType: TrailingValueType;
-  /** Размер защитного спреда */
+  /** Размер защитного спреда. */
   spread?:
     | Quotation
     | undefined;
-  /** Тип величины защитного спреда */
+  /** Тип величины защитного спреда. */
   spreadType: TrailingValueType;
 }
 
 /** Результат выставления стоп-заявки. */
 export interface PostStopOrderResponse {
-  /** Уникальный идентификатор стоп-заявки */
+  /** Уникальный идентификатор стоп-заявки. */
   stopOrderId: string;
-  /** Идентификатор ключа идемпотентности, переданный клиентом, в формате UID. Максимальная длина 36 символов. */
+  /** Идентификатор ключа идемпотентности, переданный клиентом, в формате `UID`. Максимальная длина 36 — символов. */
   orderRequestId: string;
-  /** Метадата */
+  /** Метадата. */
   responseMetadata?: ResponseMetadata | undefined;
 }
 
 /** Запрос получения списка активных стоп-заявок. */
 export interface GetStopOrdersRequest {
-  /** Идентификатор счёта клиента */
+  /** Идентификатор счёта клиента. */
   accountId: string;
-  /** Статус заявок */
+  /** Статус заявок. */
   status: StopOrderStatusOption;
-  /** Левая граница */
+  /** Левая граница. */
   from?:
     | Date
     | undefined;
-  /** Правая граница */
+  /** Правая граница. */
   to?: Date | undefined;
 }
 
 /** Список активных стоп-заявок. */
 export interface GetStopOrdersResponse {
-  /** Массив стоп-заявок по счёту */
+  /** Массив стоп-заявок по счёту. */
   stopOrders: StopOrder[];
 }
 
 /** Запрос отмены выставленной стоп-заявки. */
 export interface CancelStopOrderRequest {
-  /** Идентификатор счёта клиента */
+  /** Идентификатор счёта клиента. */
   accountId: string;
-  /** Уникальный идентификатор стоп-заявки */
+  /** Уникальный идентификатор стоп-заявки. */
   stopOrderId: string;
 }
 
 /** Результат отмены выставленной стоп-заявки. */
 export interface CancelStopOrderResponse {
-  /** Время отмены заявки в часовом поясе UTC */
+  /** Время отмены заявки по UTC. */
   time?: Date | undefined;
 }
 
 /** Информация о стоп-заявке. */
 export interface StopOrder {
-  /** Идентификатор-идентификатор стоп-заявки */
+  /** Уникальный идентификатор стоп-заявки. */
   stopOrderId: string;
-  /** Запрошено лотов */
+  /** Запрошено лотов. */
   lotsRequested: number;
-  /** Figi-идентификатор инструмента */
+  /** FIGI-идентификатор инструмента. */
   figi: string;
-  /** Направление операции */
+  /** Направление операции. */
   direction: StopOrderDirection;
-  /** Валюта стоп-заявки */
+  /** Валюта стоп-заявки. */
   currency: string;
-  /** Тип стоп-заявки */
+  /** Тип стоп-заявки. */
   orderType: StopOrderType;
-  /** Дата и время выставления заявки в часовом поясе UTC */
+  /** Дата и время выставления заявки по UTC. */
   createDate?:
     | Date
     | undefined;
-  /** Дата и время конвертации стоп-заявки в биржевую в часовом поясе UTC */
+  /** Дата и время конвертации стоп-заявки в биржевую по UTC. */
   activationDateTime?:
     | Date
     | undefined;
-  /** Дата и время снятия заявки в часовом поясе UTC */
+  /** Дата и время снятия заявки по UTC. */
   expirationTime?:
     | Date
     | undefined;
-  /** Цена заявки за 1 инструмент. Для получения стоимости лота требуется умножить на лотность инструмента. */
+  /** Цена заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента. */
   price?:
     | MoneyValue
     | undefined;
-  /** Цена активации стоп-заявки за 1 инструмент. Для получения стоимости лота требуется умножить на лотность инструмента. */
+  /** Цена активации стоп-заявки за 1 инструмент. Чтобы получить стоимость лота, нужно умножить на лотность инструмента. */
   stopPrice?:
     | MoneyValue
     | undefined;
-  /** instrument_uid идентификатор инструмента */
+  /** `instrument_uid`-идентификатор инструмента. */
   instrumentUid: string;
-  /** Подтип стоп-заявки TakeProfit */
+  /** Подтип стоп-заявки — `TakeProfit`. */
   takeProfitType: TakeProfitType;
-  /** Параметры трейлинг-стопа */
+  /** Параметры трейлинг-стопа. */
   trailingData?:
     | StopOrder_TrailingData
     | undefined;
-  /** Статус заявки */
+  /** Статус заявки. */
   status: StopOrderStatusOption;
-  /** Тип дочерней биржевой заявки для тейкпрофита */
+  /** Тип дочерней биржевой заявки для тейкпрофита. */
   exchangeOrderType: ExchangeOrderType;
+  /** Идентификатор биржевой заявки. */
+  exchangeOrderId?: string | undefined;
 }
 
 export interface StopOrder_TrailingData {
-  /** Отступ */
+  /** Отступ. */
   indent?:
     | Quotation
     | undefined;
-  /** Тип величины отступа */
+  /** Тип величины отступа. */
   indentType: TrailingValueType;
-  /** Размер защитного спреда */
+  /** Размер защитного спреда. */
   spread?:
     | Quotation
     | undefined;
-  /** Тип величины защитного спреда */
+  /** Тип величины защитного спреда. */
   spreadType: TrailingValueType;
-  /** Статус трейлинг-стопа */
+  /** Статус трейлинг-стопа. */
   status: TrailingStopStatus;
-  /** Цена исполнения */
+  /** Цена исполнения. */
   price?:
     | Quotation
     | undefined;
-  /** Локальный экстремум */
+  /** Локальный экстремум. */
   extr?: Quotation | undefined;
 }
 
@@ -1265,6 +1267,7 @@ function createBaseStopOrder(): StopOrder {
     trailingData: undefined,
     status: 0,
     exchangeOrderType: 0,
+    exchangeOrderId: undefined,
   };
 }
 
@@ -1317,6 +1320,9 @@ export const StopOrder = {
     }
     if (message.exchangeOrderType !== 0) {
       writer.uint32(128).int32(message.exchangeOrderType);
+    }
+    if (message.exchangeOrderId !== undefined) {
+      writer.uint32(138).string(message.exchangeOrderId);
     }
     return writer;
   },
@@ -1440,6 +1446,13 @@ export const StopOrder = {
 
           message.exchangeOrderType = reader.int32() as any;
           continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.exchangeOrderId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1467,6 +1480,7 @@ export const StopOrder = {
       trailingData: isSet(object.trailingData) ? StopOrder_TrailingData.fromJSON(object.trailingData) : undefined,
       status: isSet(object.status) ? stopOrderStatusOptionFromJSON(object.status) : 0,
       exchangeOrderType: isSet(object.exchangeOrderType) ? exchangeOrderTypeFromJSON(object.exchangeOrderType) : 0,
+      exchangeOrderId: isSet(object.exchangeOrderId) ? globalThis.String(object.exchangeOrderId) : undefined,
     };
   },
 
@@ -1519,6 +1533,9 @@ export const StopOrder = {
     }
     if (message.exchangeOrderType !== 0) {
       obj.exchangeOrderType = exchangeOrderTypeToJSON(message.exchangeOrderType);
+    }
+    if (message.exchangeOrderId !== undefined) {
+      obj.exchangeOrderId = message.exchangeOrderId;
     }
     return obj;
   },
@@ -1666,16 +1683,13 @@ export const StopOrder_TrailingData = {
   },
 };
 
-/**
- * Сервис предназначен для работы со стоп-заявками:</br> **1**.
- * выставление;</br> **2**. отмена;</br> **3**. получение списка стоп-заявок.
- */
+/** Сервис для работы со стоп-заявками: выставление, отмена, получение списка стоп-заявок. */
 export type StopOrdersServiceDefinition = typeof StopOrdersServiceDefinition;
 export const StopOrdersServiceDefinition = {
   name: "StopOrdersService",
   fullName: "tinkoff.public.invest.api.contract.v1.StopOrdersService",
   methods: {
-    /** Метод выставления стоп-заявки. */
+    /** Выставить стоп-заявку. */
     postStopOrder: {
       name: "PostStopOrder",
       requestType: PostStopOrderRequest,
@@ -1684,7 +1698,7 @@ export const StopOrdersServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Метод получения списка активных стоп заявок по счёту. */
+    /** Получить список активных стоп-заявок по счёту. */
     getStopOrders: {
       name: "GetStopOrders",
       requestType: GetStopOrdersRequest,
@@ -1693,7 +1707,7 @@ export const StopOrdersServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Метод отмены стоп-заявки. */
+    /** Отменить стоп-заявку. */
     cancelStopOrder: {
       name: "CancelStopOrder",
       requestType: CancelStopOrderRequest,
@@ -1706,11 +1720,11 @@ export const StopOrdersServiceDefinition = {
 } as const;
 
 export interface StopOrdersServiceImplementation<CallContextExt = {}> {
-  /** Метод выставления стоп-заявки. */
+  /** Выставить стоп-заявку. */
   postStopOrder(request: PostStopOrderRequest, context: CallContext & CallContextExt): Promise<PostStopOrderResponse>;
-  /** Метод получения списка активных стоп заявок по счёту. */
+  /** Получить список активных стоп-заявок по счёту. */
   getStopOrders(request: GetStopOrdersRequest, context: CallContext & CallContextExt): Promise<GetStopOrdersResponse>;
-  /** Метод отмены стоп-заявки. */
+  /** Отменить стоп-заявку. */
   cancelStopOrder(
     request: CancelStopOrderRequest,
     context: CallContext & CallContextExt,
@@ -1718,11 +1732,11 @@ export interface StopOrdersServiceImplementation<CallContextExt = {}> {
 }
 
 export interface StopOrdersServiceClient<CallOptionsExt = {}> {
-  /** Метод выставления стоп-заявки. */
+  /** Выставить стоп-заявку. */
   postStopOrder(request: PostStopOrderRequest, options?: CallOptions & CallOptionsExt): Promise<PostStopOrderResponse>;
-  /** Метод получения списка активных стоп заявок по счёту. */
+  /** Получить список активных стоп-заявок по счёту. */
   getStopOrders(request: GetStopOrdersRequest, options?: CallOptions & CallOptionsExt): Promise<GetStopOrdersResponse>;
-  /** Метод отмены стоп-заявки. */
+  /** Отменить стоп-заявку. */
   cancelStopOrder(
     request: CancelStopOrderRequest,
     options?: CallOptions & CallOptionsExt,

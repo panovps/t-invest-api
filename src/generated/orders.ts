@@ -225,6 +225,49 @@ export function timeInForceTypeToJSON(object: TimeInForceType): string {
   }
 }
 
+/** Тип идентификатора заявки */
+export enum OrderIdType {
+  /** ORDER_ID_TYPE_UNSPECIFIED - Тип идентификатора не указан. */
+  ORDER_ID_TYPE_UNSPECIFIED = 0,
+  /** ORDER_ID_TYPE_EXCHANGE - Биржевой идентификатор */
+  ORDER_ID_TYPE_EXCHANGE = 1,
+  /** ORDER_ID_TYPE_REQUEST - Ключ идемпотентности, переданный клиентом */
+  ORDER_ID_TYPE_REQUEST = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function orderIdTypeFromJSON(object: any): OrderIdType {
+  switch (object) {
+    case 0:
+    case "ORDER_ID_TYPE_UNSPECIFIED":
+      return OrderIdType.ORDER_ID_TYPE_UNSPECIFIED;
+    case 1:
+    case "ORDER_ID_TYPE_EXCHANGE":
+      return OrderIdType.ORDER_ID_TYPE_EXCHANGE;
+    case 2:
+    case "ORDER_ID_TYPE_REQUEST":
+      return OrderIdType.ORDER_ID_TYPE_REQUEST;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return OrderIdType.UNRECOGNIZED;
+  }
+}
+
+export function orderIdTypeToJSON(object: OrderIdType): string {
+  switch (object) {
+    case OrderIdType.ORDER_ID_TYPE_UNSPECIFIED:
+      return "ORDER_ID_TYPE_UNSPECIFIED";
+    case OrderIdType.ORDER_ID_TYPE_EXCHANGE:
+      return "ORDER_ID_TYPE_EXCHANGE";
+    case OrderIdType.ORDER_ID_TYPE_REQUEST:
+      return "ORDER_ID_TYPE_REQUEST";
+    case OrderIdType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 /** Запрос установки соединения. */
 export interface TradesStreamRequest {
   /** Идентификаторы счетов. */
@@ -238,7 +281,11 @@ export interface TradesStreamResponse {
     | OrderTrades
     | undefined;
   /** Проверка активности стрима. */
-  ping?: Ping | undefined;
+  ping?:
+    | Ping
+    | undefined;
+  /** Ответ на запрос на подписку. */
+  subscription?: SubscriptionResponse | undefined;
 }
 
 /** Информация об исполнении торгового поручения. */
@@ -367,12 +414,50 @@ export interface PostOrderResponse {
   responseMetadata?: ResponseMetadata | undefined;
 }
 
+/** Запрос выставления асинхронного торгового поручения. */
+export interface PostOrderAsyncRequest {
+  /** Идентификатор инструмента, принимает значения Figi или Instrument_uid. */
+  instrumentId: string;
+  /** Количество лотов. */
+  quantity: number;
+  /** Цена за 1 инструмент. Для получения стоимости лота требуется умножить на лотность инструмента. Игнорируется для рыночных поручений. */
+  price?:
+    | Quotation
+    | undefined;
+  /** Направление операции. */
+  direction: OrderDirection;
+  /** Номер счёта. */
+  accountId: string;
+  /** Тип заявки. */
+  orderType: OrderType;
+  /** Идентификатор запроса выставления поручения для целей идемпотентности в формате UID. Максимальная длина 36 символов. */
+  orderId: string;
+  /** Алгоритм исполнения поручения, применяется только к лимитной заявке. */
+  timeInForce?:
+    | TimeInForceType
+    | undefined;
+  /** Тип цены. */
+  priceType?: PriceType | undefined;
+}
+
+/** Результат выставления асинхронного торгового поручения. */
+export interface PostOrderAsyncResponse {
+  /** Идентификатор ключа идемпотентности, переданный клиентом, в формате UID. Максимальная длина 36 символов. */
+  orderRequestId: string;
+  /** Текущий статус заявки. */
+  executionReportStatus: OrderExecutionReportStatus;
+  /** Идентификатор торгового поручения. */
+  tradeIntentId?: string | undefined;
+}
+
 /** Запрос отмены торгового поручения. */
 export interface CancelOrderRequest {
   /** Номер счёта. */
   accountId: string;
   /** Идентификатор заявки. */
   orderId: string;
+  /** Тип идентификатора заявки. */
+  orderIdType?: OrderIdType | undefined;
 }
 
 /** Результат отмены торгового поручения. */
@@ -393,6 +478,8 @@ export interface GetOrderStateRequest {
   orderId: string;
   /** Тип цены. */
   priceType: PriceType;
+  /** Тип идентификатора заявки. */
+  orderIdType?: OrderIdType | undefined;
 }
 
 /** Запрос получения списка активных торговых поручений. */
@@ -621,6 +708,19 @@ export interface OrderStateStreamRequest {
   pingDelayMillis?: number | undefined;
 }
 
+/** Информация по подпискам */
+export interface SubscriptionResponse {
+  /** Уникальный идентификатор запроса, подробнее: [tracking_id](https://russianinvestments.github.io/investAPI/grpc#tracking-id). */
+  trackingId: string;
+  /** Статус подписки. */
+  status: ResultSubscriptionStatus;
+  /** Идентификатор открытого соединения */
+  streamId: string;
+  /** Идентификаторы счетов. */
+  accounts: string[];
+  error?: ErrorDetail | undefined;
+}
+
 /** Информация по заявкам */
 export interface OrderStateStreamResponse {
   /** Информация об исполнении торгового поручения. */
@@ -632,7 +732,7 @@ export interface OrderStateStreamResponse {
     | Ping
     | undefined;
   /** Ответ на запрос на подписку. */
-  subscription?: OrderStateStreamResponse_SubscriptionResponse | undefined;
+  subscription?: SubscriptionResponse | undefined;
 }
 
 /** Маркер */
@@ -801,18 +901,6 @@ export function orderStateStreamResponse_StatusCauseInfoToJSON(
   }
 }
 
-export interface OrderStateStreamResponse_SubscriptionResponse {
-  /** Уникальный идентификатор запроса, подробнее: [tracking_id](https://russianinvestments.github.io/investAPI/grpc#tracking-id). */
-  trackingId: string;
-  /** Статус подписки. */
-  status: ResultSubscriptionStatus;
-  /** Идентификатор открытого соединения */
-  streamId: string;
-  /** Идентификаторы счетов. */
-  accounts: string[];
-  error?: ErrorDetail | undefined;
-}
-
 /** Заявка */
 export interface OrderStateStreamResponse_OrderState {
   /** Биржевой идентификатор заявки */
@@ -940,7 +1028,7 @@ export const TradesStreamRequest = {
 };
 
 function createBaseTradesStreamResponse(): TradesStreamResponse {
-  return { orderTrades: undefined, ping: undefined };
+  return { orderTrades: undefined, ping: undefined, subscription: undefined };
 }
 
 export const TradesStreamResponse = {
@@ -950,6 +1038,9 @@ export const TradesStreamResponse = {
     }
     if (message.ping !== undefined) {
       Ping.encode(message.ping, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.subscription !== undefined) {
+      SubscriptionResponse.encode(message.subscription, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -975,6 +1066,13 @@ export const TradesStreamResponse = {
 
           message.ping = Ping.decode(reader, reader.uint32());
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.subscription = SubscriptionResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -988,6 +1086,7 @@ export const TradesStreamResponse = {
     return {
       orderTrades: isSet(object.orderTrades) ? OrderTrades.fromJSON(object.orderTrades) : undefined,
       ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
+      subscription: isSet(object.subscription) ? SubscriptionResponse.fromJSON(object.subscription) : undefined,
     };
   },
 
@@ -998,6 +1097,9 @@ export const TradesStreamResponse = {
     }
     if (message.ping !== undefined) {
       obj.ping = Ping.toJSON(message.ping);
+    }
+    if (message.subscription !== undefined) {
+      obj.subscription = SubscriptionResponse.toJSON(message.subscription);
     }
     return obj;
   },
@@ -1744,8 +1846,260 @@ export const PostOrderResponse = {
   },
 };
 
+function createBasePostOrderAsyncRequest(): PostOrderAsyncRequest {
+  return {
+    instrumentId: "",
+    quantity: 0,
+    price: undefined,
+    direction: 0,
+    accountId: "",
+    orderType: 0,
+    orderId: "",
+    timeInForce: undefined,
+    priceType: undefined,
+  };
+}
+
+export const PostOrderAsyncRequest = {
+  encode(message: PostOrderAsyncRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.instrumentId !== "") {
+      writer.uint32(10).string(message.instrumentId);
+    }
+    if (message.quantity !== 0) {
+      writer.uint32(16).int64(message.quantity);
+    }
+    if (message.price !== undefined) {
+      Quotation.encode(message.price, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.direction !== 0) {
+      writer.uint32(32).int32(message.direction);
+    }
+    if (message.accountId !== "") {
+      writer.uint32(42).string(message.accountId);
+    }
+    if (message.orderType !== 0) {
+      writer.uint32(48).int32(message.orderType);
+    }
+    if (message.orderId !== "") {
+      writer.uint32(58).string(message.orderId);
+    }
+    if (message.timeInForce !== undefined) {
+      writer.uint32(64).int32(message.timeInForce);
+    }
+    if (message.priceType !== undefined) {
+      writer.uint32(72).int32(message.priceType);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PostOrderAsyncRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePostOrderAsyncRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.instrumentId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.quantity = longToNumber(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.price = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.direction = reader.int32() as any;
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.orderType = reader.int32() as any;
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.orderId = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.timeInForce = reader.int32() as any;
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.priceType = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PostOrderAsyncRequest {
+    return {
+      instrumentId: isSet(object.instrumentId) ? globalThis.String(object.instrumentId) : "",
+      quantity: isSet(object.quantity) ? globalThis.Number(object.quantity) : 0,
+      price: isSet(object.price) ? Quotation.fromJSON(object.price) : undefined,
+      direction: isSet(object.direction) ? orderDirectionFromJSON(object.direction) : 0,
+      accountId: isSet(object.accountId) ? globalThis.String(object.accountId) : "",
+      orderType: isSet(object.orderType) ? orderTypeFromJSON(object.orderType) : 0,
+      orderId: isSet(object.orderId) ? globalThis.String(object.orderId) : "",
+      timeInForce: isSet(object.timeInForce) ? timeInForceTypeFromJSON(object.timeInForce) : undefined,
+      priceType: isSet(object.priceType) ? priceTypeFromJSON(object.priceType) : undefined,
+    };
+  },
+
+  toJSON(message: PostOrderAsyncRequest): unknown {
+    const obj: any = {};
+    if (message.instrumentId !== "") {
+      obj.instrumentId = message.instrumentId;
+    }
+    if (message.quantity !== 0) {
+      obj.quantity = Math.round(message.quantity);
+    }
+    if (message.price !== undefined) {
+      obj.price = Quotation.toJSON(message.price);
+    }
+    if (message.direction !== 0) {
+      obj.direction = orderDirectionToJSON(message.direction);
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
+    }
+    if (message.orderType !== 0) {
+      obj.orderType = orderTypeToJSON(message.orderType);
+    }
+    if (message.orderId !== "") {
+      obj.orderId = message.orderId;
+    }
+    if (message.timeInForce !== undefined) {
+      obj.timeInForce = timeInForceTypeToJSON(message.timeInForce);
+    }
+    if (message.priceType !== undefined) {
+      obj.priceType = priceTypeToJSON(message.priceType);
+    }
+    return obj;
+  },
+};
+
+function createBasePostOrderAsyncResponse(): PostOrderAsyncResponse {
+  return { orderRequestId: "", executionReportStatus: 0, tradeIntentId: undefined };
+}
+
+export const PostOrderAsyncResponse = {
+  encode(message: PostOrderAsyncResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orderRequestId !== "") {
+      writer.uint32(10).string(message.orderRequestId);
+    }
+    if (message.executionReportStatus !== 0) {
+      writer.uint32(16).int32(message.executionReportStatus);
+    }
+    if (message.tradeIntentId !== undefined) {
+      writer.uint32(26).string(message.tradeIntentId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PostOrderAsyncResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePostOrderAsyncResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orderRequestId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.executionReportStatus = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.tradeIntentId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PostOrderAsyncResponse {
+    return {
+      orderRequestId: isSet(object.orderRequestId) ? globalThis.String(object.orderRequestId) : "",
+      executionReportStatus: isSet(object.executionReportStatus)
+        ? orderExecutionReportStatusFromJSON(object.executionReportStatus)
+        : 0,
+      tradeIntentId: isSet(object.tradeIntentId) ? globalThis.String(object.tradeIntentId) : undefined,
+    };
+  },
+
+  toJSON(message: PostOrderAsyncResponse): unknown {
+    const obj: any = {};
+    if (message.orderRequestId !== "") {
+      obj.orderRequestId = message.orderRequestId;
+    }
+    if (message.executionReportStatus !== 0) {
+      obj.executionReportStatus = orderExecutionReportStatusToJSON(message.executionReportStatus);
+    }
+    if (message.tradeIntentId !== undefined) {
+      obj.tradeIntentId = message.tradeIntentId;
+    }
+    return obj;
+  },
+};
+
 function createBaseCancelOrderRequest(): CancelOrderRequest {
-  return { accountId: "", orderId: "" };
+  return { accountId: "", orderId: "", orderIdType: undefined };
 }
 
 export const CancelOrderRequest = {
@@ -1755,6 +2109,9 @@ export const CancelOrderRequest = {
     }
     if (message.orderId !== "") {
       writer.uint32(18).string(message.orderId);
+    }
+    if (message.orderIdType !== undefined) {
+      writer.uint32(24).int32(message.orderIdType);
     }
     return writer;
   },
@@ -1780,6 +2137,13 @@ export const CancelOrderRequest = {
 
           message.orderId = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.orderIdType = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1793,6 +2157,7 @@ export const CancelOrderRequest = {
     return {
       accountId: isSet(object.accountId) ? globalThis.String(object.accountId) : "",
       orderId: isSet(object.orderId) ? globalThis.String(object.orderId) : "",
+      orderIdType: isSet(object.orderIdType) ? orderIdTypeFromJSON(object.orderIdType) : undefined,
     };
   },
 
@@ -1803,6 +2168,9 @@ export const CancelOrderRequest = {
     }
     if (message.orderId !== "") {
       obj.orderId = message.orderId;
+    }
+    if (message.orderIdType !== undefined) {
+      obj.orderIdType = orderIdTypeToJSON(message.orderIdType);
     }
     return obj;
   },
@@ -1873,7 +2241,7 @@ export const CancelOrderResponse = {
 };
 
 function createBaseGetOrderStateRequest(): GetOrderStateRequest {
-  return { accountId: "", orderId: "", priceType: 0 };
+  return { accountId: "", orderId: "", priceType: 0, orderIdType: undefined };
 }
 
 export const GetOrderStateRequest = {
@@ -1886,6 +2254,9 @@ export const GetOrderStateRequest = {
     }
     if (message.priceType !== 0) {
       writer.uint32(24).int32(message.priceType);
+    }
+    if (message.orderIdType !== undefined) {
+      writer.uint32(32).int32(message.orderIdType);
     }
     return writer;
   },
@@ -1918,6 +2289,13 @@ export const GetOrderStateRequest = {
 
           message.priceType = reader.int32() as any;
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.orderIdType = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1932,6 +2310,7 @@ export const GetOrderStateRequest = {
       accountId: isSet(object.accountId) ? globalThis.String(object.accountId) : "",
       orderId: isSet(object.orderId) ? globalThis.String(object.orderId) : "",
       priceType: isSet(object.priceType) ? priceTypeFromJSON(object.priceType) : 0,
+      orderIdType: isSet(object.orderIdType) ? orderIdTypeFromJSON(object.orderIdType) : undefined,
     };
   },
 
@@ -1945,6 +2324,9 @@ export const GetOrderStateRequest = {
     }
     if (message.priceType !== 0) {
       obj.priceType = priceTypeToJSON(message.priceType);
+    }
+    if (message.orderIdType !== undefined) {
+      obj.orderIdType = orderIdTypeToJSON(message.orderIdType);
     }
     return obj;
   },
@@ -3383,94 +3765,12 @@ export const OrderStateStreamRequest = {
   },
 };
 
-function createBaseOrderStateStreamResponse(): OrderStateStreamResponse {
-  return { orderState: undefined, ping: undefined, subscription: undefined };
-}
-
-export const OrderStateStreamResponse = {
-  encode(message: OrderStateStreamResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orderState !== undefined) {
-      OrderStateStreamResponse_OrderState.encode(message.orderState, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.ping !== undefined) {
-      Ping.encode(message.ping, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.subscription !== undefined) {
-      OrderStateStreamResponse_SubscriptionResponse.encode(message.subscription, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): OrderStateStreamResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOrderStateStreamResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.orderState = OrderStateStreamResponse_OrderState.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.ping = Ping.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.subscription = OrderStateStreamResponse_SubscriptionResponse.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): OrderStateStreamResponse {
-    return {
-      orderState: isSet(object.orderState)
-        ? OrderStateStreamResponse_OrderState.fromJSON(object.orderState)
-        : undefined,
-      ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
-      subscription: isSet(object.subscription)
-        ? OrderStateStreamResponse_SubscriptionResponse.fromJSON(object.subscription)
-        : undefined,
-    };
-  },
-
-  toJSON(message: OrderStateStreamResponse): unknown {
-    const obj: any = {};
-    if (message.orderState !== undefined) {
-      obj.orderState = OrderStateStreamResponse_OrderState.toJSON(message.orderState);
-    }
-    if (message.ping !== undefined) {
-      obj.ping = Ping.toJSON(message.ping);
-    }
-    if (message.subscription !== undefined) {
-      obj.subscription = OrderStateStreamResponse_SubscriptionResponse.toJSON(message.subscription);
-    }
-    return obj;
-  },
-};
-
-function createBaseOrderStateStreamResponse_SubscriptionResponse(): OrderStateStreamResponse_SubscriptionResponse {
+function createBaseSubscriptionResponse(): SubscriptionResponse {
   return { trackingId: "", status: 0, streamId: "", accounts: [], error: undefined };
 }
 
-export const OrderStateStreamResponse_SubscriptionResponse = {
-  encode(message: OrderStateStreamResponse_SubscriptionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SubscriptionResponse = {
+  encode(message: SubscriptionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.trackingId !== "") {
       writer.uint32(10).string(message.trackingId);
     }
@@ -3489,10 +3789,10 @@ export const OrderStateStreamResponse_SubscriptionResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OrderStateStreamResponse_SubscriptionResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SubscriptionResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOrderStateStreamResponse_SubscriptionResponse();
+    const message = createBaseSubscriptionResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3540,7 +3840,7 @@ export const OrderStateStreamResponse_SubscriptionResponse = {
     return message;
   },
 
-  fromJSON(object: any): OrderStateStreamResponse_SubscriptionResponse {
+  fromJSON(object: any): SubscriptionResponse {
     return {
       trackingId: isSet(object.trackingId) ? globalThis.String(object.trackingId) : "",
       status: isSet(object.status) ? resultSubscriptionStatusFromJSON(object.status) : 0,
@@ -3550,7 +3850,7 @@ export const OrderStateStreamResponse_SubscriptionResponse = {
     };
   },
 
-  toJSON(message: OrderStateStreamResponse_SubscriptionResponse): unknown {
+  toJSON(message: SubscriptionResponse): unknown {
     const obj: any = {};
     if (message.trackingId !== "") {
       obj.trackingId = message.trackingId;
@@ -3566,6 +3866,86 @@ export const OrderStateStreamResponse_SubscriptionResponse = {
     }
     if (message.error !== undefined) {
       obj.error = ErrorDetail.toJSON(message.error);
+    }
+    return obj;
+  },
+};
+
+function createBaseOrderStateStreamResponse(): OrderStateStreamResponse {
+  return { orderState: undefined, ping: undefined, subscription: undefined };
+}
+
+export const OrderStateStreamResponse = {
+  encode(message: OrderStateStreamResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orderState !== undefined) {
+      OrderStateStreamResponse_OrderState.encode(message.orderState, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.ping !== undefined) {
+      Ping.encode(message.ping, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.subscription !== undefined) {
+      SubscriptionResponse.encode(message.subscription, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrderStateStreamResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrderStateStreamResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orderState = OrderStateStreamResponse_OrderState.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.ping = Ping.decode(reader, reader.uint32());
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.subscription = SubscriptionResponse.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OrderStateStreamResponse {
+    return {
+      orderState: isSet(object.orderState)
+        ? OrderStateStreamResponse_OrderState.fromJSON(object.orderState)
+        : undefined,
+      ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
+      subscription: isSet(object.subscription) ? SubscriptionResponse.fromJSON(object.subscription) : undefined,
+    };
+  },
+
+  toJSON(message: OrderStateStreamResponse): unknown {
+    const obj: any = {};
+    if (message.orderState !== undefined) {
+      obj.orderState = OrderStateStreamResponse_OrderState.toJSON(message.orderState);
+    }
+    if (message.ping !== undefined) {
+      obj.ping = Ping.toJSON(message.ping);
+    }
+    if (message.subscription !== undefined) {
+      obj.subscription = SubscriptionResponse.toJSON(message.subscription);
     }
     return obj;
   },
@@ -4088,6 +4468,15 @@ export const OrdersServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Асинхронный метод выставления заявки. */
+    postOrderAsync: {
+      name: "PostOrderAsync",
+      requestType: PostOrderAsyncRequest,
+      requestStream: false,
+      responseType: PostOrderAsyncResponse,
+      responseStream: false,
+      options: {},
+    },
     /** Метод отмены биржевой заявки. */
     cancelOrder: {
       name: "CancelOrder",
@@ -4148,6 +4537,11 @@ export const OrdersServiceDefinition = {
 export interface OrdersServiceImplementation<CallContextExt = {}> {
   /** Метод выставления заявки. */
   postOrder(request: PostOrderRequest, context: CallContext & CallContextExt): Promise<PostOrderResponse>;
+  /** Асинхронный метод выставления заявки. */
+  postOrderAsync(
+    request: PostOrderAsyncRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<PostOrderAsyncResponse>;
   /** Метод отмены биржевой заявки. */
   cancelOrder(request: CancelOrderRequest, context: CallContext & CallContextExt): Promise<CancelOrderResponse>;
   /** Метод получения статуса торгового поручения. */
@@ -4165,6 +4559,11 @@ export interface OrdersServiceImplementation<CallContextExt = {}> {
 export interface OrdersServiceClient<CallOptionsExt = {}> {
   /** Метод выставления заявки. */
   postOrder(request: PostOrderRequest, options?: CallOptions & CallOptionsExt): Promise<PostOrderResponse>;
+  /** Асинхронный метод выставления заявки. */
+  postOrderAsync(
+    request: PostOrderAsyncRequest,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<PostOrderAsyncResponse>;
   /** Метод отмены биржевой заявки. */
   cancelOrder(request: CancelOrderRequest, options?: CallOptions & CallOptionsExt): Promise<CancelOrderResponse>;
   /** Метод получения статуса торгового поручения. */

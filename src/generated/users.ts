@@ -73,6 +73,8 @@ export enum AccountStatus {
   ACCOUNT_STATUS_OPEN = 2,
   /** ACCOUNT_STATUS_CLOSED - Закрытый счёт. */
   ACCOUNT_STATUS_CLOSED = 3,
+  /** ACCOUNT_STATUS_ALL - Все счета. */
+  ACCOUNT_STATUS_ALL = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -90,6 +92,9 @@ export function accountStatusFromJSON(object: any): AccountStatus {
     case 3:
     case "ACCOUNT_STATUS_CLOSED":
       return AccountStatus.ACCOUNT_STATUS_CLOSED;
+    case 4:
+    case "ACCOUNT_STATUS_ALL":
+      return AccountStatus.ACCOUNT_STATUS_ALL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -107,6 +112,8 @@ export function accountStatusToJSON(object: AccountStatus): string {
       return "ACCOUNT_STATUS_OPEN";
     case AccountStatus.ACCOUNT_STATUS_CLOSED:
       return "ACCOUNT_STATUS_CLOSED";
+    case AccountStatus.ACCOUNT_STATUS_ALL:
+      return "ACCOUNT_STATUS_ALL";
     case AccountStatus.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -165,6 +172,8 @@ export function accessLevelToJSON(object: AccessLevel): string {
 
 /** Запрос получения счетов пользователя. */
 export interface GetAccountsRequest {
+  /** Статус счета. */
+  status?: AccountStatus | undefined;
 }
 
 /** Список счетов пользователя. */
@@ -274,11 +283,14 @@ export interface GetInfoResponse {
 }
 
 function createBaseGetAccountsRequest(): GetAccountsRequest {
-  return {};
+  return { status: undefined };
 }
 
 export const GetAccountsRequest = {
-  encode(_: GetAccountsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GetAccountsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.status !== undefined) {
+      writer.uint32(8).int32(message.status);
+    }
     return writer;
   },
 
@@ -289,6 +301,13 @@ export const GetAccountsRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -298,12 +317,15 @@ export const GetAccountsRequest = {
     return message;
   },
 
-  fromJSON(_: any): GetAccountsRequest {
-    return {};
+  fromJSON(object: any): GetAccountsRequest {
+    return { status: isSet(object.status) ? accountStatusFromJSON(object.status) : undefined };
   },
 
-  toJSON(_: GetAccountsRequest): unknown {
+  toJSON(message: GetAccountsRequest): unknown {
     const obj: any = {};
+    if (message.status !== undefined) {
+      obj.status = accountStatusToJSON(message.status);
+    }
     return obj;
   },
 };

@@ -607,7 +607,7 @@ export enum RealExchange {
   REAL_EXCHANGE_RTS = 2,
   /** REAL_EXCHANGE_OTC - Внебиржевой инструмент. */
   REAL_EXCHANGE_OTC = 3,
-  /** REAL_EXCHANGE_DEALER - Инструменты, торгуемые у дилера. */
+  /** REAL_EXCHANGE_DEALER - Инструмент, торгуемый на площадке брокера. */
   REAL_EXCHANGE_DEALER = 4,
   UNRECOGNIZED = -1,
 }
@@ -1225,7 +1225,7 @@ export interface Option {
   basicAssetPositionUid: string;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Реальная площадка исполнения расчётов (биржа). Допустимые значения — `REAL_EXCHANGE_MOEX`, `REAL_EXCHANGE_RTS`. */
+  /** Реальная площадка исполнения расчётов (биржа). */
   realExchange: RealExchange;
   /** Направление опциона. */
   direction: OptionDirection;
@@ -1271,19 +1271,19 @@ export interface Option {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1319,7 +1319,7 @@ export interface Option {
   shortEnabledFlag: boolean;
   /** Возможность покупки или продажи на ИИС. */
   forIisFlag: boolean;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -1369,19 +1369,19 @@ export interface Bond {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1435,7 +1435,7 @@ export interface Bond {
   issueSizePlan: number;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -1513,19 +1513,19 @@ export interface Currency {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1545,7 +1545,7 @@ export interface Currency {
   countryOfRiskName: string;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -1607,19 +1607,19 @@ export interface Etf {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1653,7 +1653,7 @@ export interface Etf {
   rebalancingFreq: string;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -1717,19 +1717,19 @@ export interface Future {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт ](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1769,7 +1769,7 @@ export interface Future {
     | undefined;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -1843,19 +1843,19 @@ export interface Share {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1885,7 +1885,7 @@ export interface Share {
     | undefined;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -2035,19 +2035,19 @@ export interface Instrument {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска в лонг](https://help.tbank.ru/margin-trade/long/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска в шорт](https://help.tbank.ru/margin-trade/short/risk-rate/). */
+  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
   dshortMin?:
     | Quotation
     | undefined;
@@ -2065,7 +2065,7 @@ export interface Instrument {
   instrumentType: string;
   /** Текущий режим торгов инструмента. */
   tradingStatus: SecurityTradingStatus;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Признак доступности для покупки. */
   buyAvailableFlag: boolean;
@@ -2612,7 +2612,7 @@ export interface FavoriteInstrument {
   name: string;
   /** Уникальный идентификатор инструмента. */
   uid: string;
-  /** Признак внебиржевой ценной бумаги. */
+  /** Флаг, используемый ранее для определения внебиржевых инструментов. На данный момент не используется для торгуемых через API инструментов. Может использоваться как фильтр для операций, совершавшихся некоторое время назад на ОТС площадке. */
   otcFlag: boolean;
   /** Возможность торговать инструментом через API. */
   apiTradeAvailableFlag: boolean;
@@ -17343,7 +17343,7 @@ export const InstrumentsServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Получить список активов. Метод работает для всех инструментов, кроме срочных — опционов и фьючерсов. */
+    /** Получить список активов. Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов. */
     getAssets: {
       name: "GetAssets",
       requestType: AssetsRequest,
@@ -17506,7 +17506,7 @@ export interface InstrumentsServiceImplementation<CallContextExt = {}> {
   getDividends(request: GetDividendsRequest, context: CallContext & CallContextExt): Promise<GetDividendsResponse>;
   /** Получить актив по его идентификатору. */
   getAssetBy(request: AssetRequest, context: CallContext & CallContextExt): Promise<AssetResponse>;
-  /** Получить список активов. Метод работает для всех инструментов, кроме срочных — опционов и фьючерсов. */
+  /** Получить список активов. Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов. */
   getAssets(request: AssetsRequest, context: CallContext & CallContextExt): Promise<AssetsResponse>;
   /** Получить список избранных инструментов. */
   getFavorites(request: GetFavoritesRequest, context: CallContext & CallContextExt): Promise<GetFavoritesResponse>;
@@ -17603,7 +17603,7 @@ export interface InstrumentsServiceClient<CallOptionsExt = {}> {
   getDividends(request: GetDividendsRequest, options?: CallOptions & CallOptionsExt): Promise<GetDividendsResponse>;
   /** Получить актив по его идентификатору. */
   getAssetBy(request: AssetRequest, options?: CallOptions & CallOptionsExt): Promise<AssetResponse>;
-  /** Получить список активов. Метод работает для всех инструментов, кроме срочных — опционов и фьючерсов. */
+  /** Получить список активов. Метод работает для всех инструментов, кроме срочных — фьючерсов и опционов. */
   getAssets(request: AssetsRequest, options?: CallOptions & CallOptionsExt): Promise<AssetsResponse>;
   /** Получить список избранных инструментов. */
   getFavorites(request: GetFavoritesRequest, options?: CallOptions & CallOptionsExt): Promise<GetFavoritesResponse>;
