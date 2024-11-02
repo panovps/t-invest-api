@@ -1,7 +1,7 @@
 {
   "name": "t-invest-api",
   "description": "Node.js SDK for T-Bank Invest API",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "private": false,
   "type": "module",
   "main": "./cjs/index.js",
@@ -35,7 +35,7 @@
     "debug": "^4.3.4",
     "long": "^5.2.3",
     "ms": "^3.0.0-beta.2",
-    "nice-grpc": "^2.1.7",
+    "nice-grpc": "^2.1.9",
     "protobufjs": "^7.2.5",
     "typed-emitter": "^2.1.0"
   },
