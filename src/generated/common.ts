@@ -347,6 +347,16 @@ export interface Quotation {
   nano: number;
 }
 
+export interface PingRequest {
+  /** Время формирования запроса */
+  time?: Date | undefined;
+}
+
+export interface PingDelaySettings {
+  /** Задержка пинг сообщений milliseconds 5000-180000, default 120000 */
+  pingDelayMs?: number | undefined;
+}
+
 /** Проверка активности стрима. */
 export interface Ping {
   /** Время проверки. */
@@ -355,6 +365,8 @@ export interface Ping {
     | undefined;
   /** Идентификатор соединения. */
   streamId: string;
+  /** Время формирования запроса */
+  pingRequestTime?: Date | undefined;
 }
 
 export interface Page {
@@ -538,8 +550,104 @@ export const Quotation = {
   },
 };
 
+function createBasePingRequest(): PingRequest {
+  return { time: undefined };
+}
+
+export const PingRequest = {
+  encode(message: PingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.time !== undefined) {
+      Timestamp.encode(toTimestamp(message.time), writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PingRequest {
+    return { time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined };
+  },
+
+  toJSON(message: PingRequest): unknown {
+    const obj: any = {};
+    if (message.time !== undefined) {
+      obj.time = message.time.toISOString();
+    }
+    return obj;
+  },
+};
+
+function createBasePingDelaySettings(): PingDelaySettings {
+  return { pingDelayMs: undefined };
+}
+
+export const PingDelaySettings = {
+  encode(message: PingDelaySettings, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pingDelayMs !== undefined) {
+      writer.uint32(120).int32(message.pingDelayMs);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PingDelaySettings {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePingDelaySettings();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.pingDelayMs = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PingDelaySettings {
+    return { pingDelayMs: isSet(object.pingDelayMs) ? globalThis.Number(object.pingDelayMs) : undefined };
+  },
+
+  toJSON(message: PingDelaySettings): unknown {
+    const obj: any = {};
+    if (message.pingDelayMs !== undefined) {
+      obj.pingDelayMs = Math.round(message.pingDelayMs);
+    }
+    return obj;
+  },
+};
+
 function createBasePing(): Ping {
-  return { time: undefined, streamId: "" };
+  return { time: undefined, streamId: "", pingRequestTime: undefined };
 }
 
 export const Ping = {
@@ -549,6 +657,9 @@ export const Ping = {
     }
     if (message.streamId !== "") {
       writer.uint32(18).string(message.streamId);
+    }
+    if (message.pingRequestTime !== undefined) {
+      Timestamp.encode(toTimestamp(message.pingRequestTime), writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -574,6 +685,13 @@ export const Ping = {
 
           message.streamId = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.pingRequestTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -587,6 +705,7 @@ export const Ping = {
     return {
       time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
       streamId: isSet(object.streamId) ? globalThis.String(object.streamId) : "",
+      pingRequestTime: isSet(object.pingRequestTime) ? fromJsonTimestamp(object.pingRequestTime) : undefined,
     };
   },
 
@@ -597,6 +716,9 @@ export const Ping = {
     }
     if (message.streamId !== "") {
       obj.streamId = message.streamId;
+    }
+    if (message.pingRequestTime !== undefined) {
+      obj.pingRequestTime = message.pingRequestTime.toISOString();
     }
     return obj;
   },

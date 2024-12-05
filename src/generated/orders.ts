@@ -272,6 +272,8 @@ export function orderIdTypeToJSON(object: OrderIdType): string {
 export interface TradesStreamRequest {
   /** Идентификаторы счетов. */
   accounts: string[];
+  /** Задержка пинг сообщений milliseconds 5000-180000, default 120000 */
+  pingDelayMs?: number | undefined;
 }
 
 /** Информация о торговых поручениях. */
@@ -704,8 +706,8 @@ export interface GetOrderPriceResponse_ExtraFuture {
 export interface OrderStateStreamRequest {
   /** Идентификаторы счетов. */
   accounts: string[];
-  /** Задержка пинг сообщений milliseconds 1000-120000, default 120000 */
-  pingDelayMillis?: number | undefined;
+  /** Задержка пинг сообщений milliseconds 5000-180000, default 120000 */
+  pingDelayMs?: number | undefined;
 }
 
 /** Информация по подпискам */
@@ -978,13 +980,16 @@ export interface OrderStateStreamResponse_OrderState {
 }
 
 function createBaseTradesStreamRequest(): TradesStreamRequest {
-  return { accounts: [] };
+  return { accounts: [], pingDelayMs: undefined };
 }
 
 export const TradesStreamRequest = {
   encode(message: TradesStreamRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.accounts) {
       writer.uint32(10).string(v!);
+    }
+    if (message.pingDelayMs !== undefined) {
+      writer.uint32(120).int32(message.pingDelayMs);
     }
     return writer;
   },
@@ -1003,6 +1008,13 @@ export const TradesStreamRequest = {
 
           message.accounts.push(reader.string());
           continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.pingDelayMs = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1015,6 +1027,7 @@ export const TradesStreamRequest = {
   fromJSON(object: any): TradesStreamRequest {
     return {
       accounts: globalThis.Array.isArray(object?.accounts) ? object.accounts.map((e: any) => globalThis.String(e)) : [],
+      pingDelayMs: isSet(object.pingDelayMs) ? globalThis.Number(object.pingDelayMs) : undefined,
     };
   },
 
@@ -1022,6 +1035,9 @@ export const TradesStreamRequest = {
     const obj: any = {};
     if (message.accounts?.length) {
       obj.accounts = message.accounts;
+    }
+    if (message.pingDelayMs !== undefined) {
+      obj.pingDelayMs = Math.round(message.pingDelayMs);
     }
     return obj;
   },
@@ -3702,7 +3718,7 @@ export const GetOrderPriceResponse_ExtraFuture = {
 };
 
 function createBaseOrderStateStreamRequest(): OrderStateStreamRequest {
-  return { accounts: [], pingDelayMillis: undefined };
+  return { accounts: [], pingDelayMs: undefined };
 }
 
 export const OrderStateStreamRequest = {
@@ -3710,8 +3726,8 @@ export const OrderStateStreamRequest = {
     for (const v of message.accounts) {
       writer.uint32(10).string(v!);
     }
-    if (message.pingDelayMillis !== undefined) {
-      writer.uint32(120).int32(message.pingDelayMillis);
+    if (message.pingDelayMs !== undefined) {
+      writer.uint32(120).int32(message.pingDelayMs);
     }
     return writer;
   },
@@ -3735,7 +3751,7 @@ export const OrderStateStreamRequest = {
             break;
           }
 
-          message.pingDelayMillis = reader.int32();
+          message.pingDelayMs = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -3749,7 +3765,7 @@ export const OrderStateStreamRequest = {
   fromJSON(object: any): OrderStateStreamRequest {
     return {
       accounts: globalThis.Array.isArray(object?.accounts) ? object.accounts.map((e: any) => globalThis.String(e)) : [],
-      pingDelayMillis: isSet(object.pingDelayMillis) ? globalThis.Number(object.pingDelayMillis) : undefined,
+      pingDelayMs: isSet(object.pingDelayMs) ? globalThis.Number(object.pingDelayMs) : undefined,
     };
   },
 
@@ -3758,8 +3774,8 @@ export const OrderStateStreamRequest = {
     if (message.accounts?.length) {
       obj.accounts = message.accounts;
     }
-    if (message.pingDelayMillis !== undefined) {
-      obj.pingDelayMillis = Math.round(message.pingDelayMillis);
+    if (message.pingDelayMs !== undefined) {
+      obj.pingDelayMs = Math.round(message.pingDelayMs);
     }
     return obj;
   },

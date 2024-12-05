@@ -1271,19 +1271,35 @@ export interface Option {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1294,6 +1310,14 @@ export interface Option {
   /** Цена страйка. */
   strikePrice?:
     | MoneyValue
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?:
+    | Quotation
     | undefined;
   /** Дата истечения срока в формате UTC. */
   expirationDate?:
@@ -1369,19 +1393,35 @@ export interface Bond {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1489,6 +1529,16 @@ export interface Bond {
     | undefined;
   /** Тип облигации. */
   bondType: BondType;
+  /** Дата погашения облигации. */
+  callDate?:
+    | Date
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Объект передачи информации о валюте. */
@@ -1513,19 +1563,35 @@ export interface Currency {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1582,7 +1648,15 @@ export interface Currency {
     | Date
     | undefined;
   /** Информация о бренде. */
-  brand?: BrandData | undefined;
+  brand?:
+    | BrandData
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Объект передачи информации об инвестиционном фонде. */
@@ -1607,19 +1681,35 @@ export interface Etf {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1694,7 +1784,15 @@ export interface Etf {
     | Date
     | undefined;
   /** Информация о бренде. */
-  brand?: BrandData | undefined;
+  brand?:
+    | BrandData
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Объект передачи информации о фьючерсе. */
@@ -1717,19 +1815,35 @@ export interface Future {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1818,7 +1932,15 @@ export interface Future {
     | Quotation
     | undefined;
   /** Информация о бренде. */
-  brand?: BrandData | undefined;
+  brand?:
+    | BrandData
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Объект передачи информации об акции. */
@@ -1843,19 +1965,35 @@ export interface Share {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -1930,7 +2068,15 @@ export interface Share {
     | Date
     | undefined;
   /** Информация о бренде. */
-  brand?: BrandData | undefined;
+  brand?:
+    | BrandData
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Запрос НКД по облигации. */
@@ -2035,19 +2181,35 @@ export interface Instrument {
   kshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlong?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КСУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshort?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР лонг. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dlongMin?:
     | Quotation
     | undefined;
-  /** Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  /**
+   * Ставка риска начальной маржи для КПУР шорт. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5).
+   *
+   * @deprecated
+   */
   dshortMin?:
     | Quotation
     | undefined;
@@ -2104,7 +2266,15 @@ export interface Instrument {
     | Date
     | undefined;
   /** Информация о бренде. */
-  brand?: BrandData | undefined;
+  brand?:
+    | BrandData
+    | undefined;
+  /** Ставка риска в лонг, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dlongClient?:
+    | Quotation
+    | undefined;
+  /** Ставка риска в шорт, с учетом текущего уровня риска портфеля клиента. [Подробнее про ставки риска](https://www.tbank.ru/invest/help/brokerage/account/margin/about/#q5). */
+  dshortClient?: Quotation | undefined;
 }
 
 /** Запрос дивидендов. */
@@ -2760,6 +2930,8 @@ export interface InstrumentShort {
   weekendFlag: boolean;
   /** Флаг заблокированного ТКС. */
   blockedTcaFlag: boolean;
+  /** Количество бумаг в лоте. */
+  lot: number;
 }
 
 /** Запрос списка брендов. */
@@ -5188,6 +5360,8 @@ function createBaseOption(): Option {
     dshortMin: undefined,
     minPriceIncrement: undefined,
     strikePrice: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
     expirationDate: undefined,
     firstTradeDate: undefined,
     lastTradeDate: undefined,
@@ -5299,6 +5473,12 @@ export const Option = {
     }
     if (message.strikePrice !== undefined) {
       MoneyValue.encode(message.strikePrice, writer.uint32(1930).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(2322).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(2330).fork()).ldelim();
     }
     if (message.expirationDate !== undefined) {
       Timestamp.encode(toTimestamp(message.expirationDate), writer.uint32(2410).fork()).ldelim();
@@ -5569,6 +5749,20 @@ export const Option = {
 
           message.strikePrice = MoneyValue.decode(reader, reader.uint32());
           continue;
+        case 290:
+          if (tag !== 2322) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 291:
+          if (tag !== 2330) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
         case 301:
           if (tag !== 2410) {
             break;
@@ -5709,6 +5903,8 @@ export const Option = {
       dshortMin: isSet(object.dshortMin) ? Quotation.fromJSON(object.dshortMin) : undefined,
       minPriceIncrement: isSet(object.minPriceIncrement) ? Quotation.fromJSON(object.minPriceIncrement) : undefined,
       strikePrice: isSet(object.strikePrice) ? MoneyValue.fromJSON(object.strikePrice) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
       expirationDate: isSet(object.expirationDate) ? fromJsonTimestamp(object.expirationDate) : undefined,
       firstTradeDate: isSet(object.firstTradeDate) ? fromJsonTimestamp(object.firstTradeDate) : undefined,
       lastTradeDate: isSet(object.lastTradeDate) ? fromJsonTimestamp(object.lastTradeDate) : undefined,
@@ -5826,6 +6022,12 @@ export const Option = {
     }
     if (message.strikePrice !== undefined) {
       obj.strikePrice = MoneyValue.toJSON(message.strikePrice);
+    }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
     }
     if (message.expirationDate !== undefined) {
       obj.expirationDate = message.expirationDate.toISOString();
@@ -6028,6 +6230,9 @@ function createBaseBond(): Bond {
     riskLevel: 0,
     brand: undefined,
     bondType: 0,
+    callDate: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -6191,6 +6396,15 @@ export const Bond = {
     }
     if (message.bondType !== 0) {
       writer.uint32(520).int32(message.bondType);
+    }
+    if (message.callDate !== undefined) {
+      Timestamp.encode(toTimestamp(message.callDate), writer.uint32(554).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -6573,6 +6787,27 @@ export const Bond = {
 
           message.bondType = reader.int32() as any;
           continue;
+        case 69:
+          if (tag !== 554) {
+            break;
+          }
+
+          message.callDate = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 90:
+          if (tag !== 722) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6643,6 +6878,9 @@ export const Bond = {
       riskLevel: isSet(object.riskLevel) ? riskLevelFromJSON(object.riskLevel) : 0,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
       bondType: isSet(object.bondType) ? bondTypeFromJSON(object.bondType) : 0,
+      callDate: isSet(object.callDate) ? fromJsonTimestamp(object.callDate) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -6807,6 +7045,15 @@ export const Bond = {
     if (message.bondType !== 0) {
       obj.bondType = bondTypeToJSON(message.bondType);
     }
+    if (message.callDate !== undefined) {
+      obj.callDate = message.callDate.toISOString();
+    }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
+    }
     return obj;
   },
 };
@@ -6848,6 +7095,8 @@ function createBaseCurrency(): Currency {
     first1minCandleDate: undefined,
     first1dayCandleDate: undefined,
     brand: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -6957,6 +7206,12 @@ export const Currency = {
     }
     if (message.brand !== undefined) {
       BrandData.encode(message.brand, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -7213,6 +7468,20 @@ export const Currency = {
 
           message.brand = BrandData.decode(reader, reader.uint32());
           continue;
+        case 90:
+          if (tag !== 722) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7265,6 +7534,8 @@ export const Currency = {
         ? fromJsonTimestamp(object.first1dayCandleDate)
         : undefined,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -7375,6 +7646,12 @@ export const Currency = {
     if (message.brand !== undefined) {
       obj.brand = BrandData.toJSON(message.brand);
     }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
+    }
     return obj;
   },
 };
@@ -7423,6 +7700,8 @@ function createBaseEtf(): Etf {
     first1minCandleDate: undefined,
     first1dayCandleDate: undefined,
     brand: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -7553,6 +7832,12 @@ export const Etf = {
     }
     if (message.brand !== undefined) {
       BrandData.encode(message.brand, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -7858,6 +8143,20 @@ export const Etf = {
 
           message.brand = BrandData.decode(reader, reader.uint32());
           continue;
+        case 90:
+          if (tag !== 722) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7919,6 +8218,8 @@ export const Etf = {
         ? fromJsonTimestamp(object.first1dayCandleDate)
         : undefined,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -8050,6 +8351,12 @@ export const Etf = {
     if (message.brand !== undefined) {
       obj.brand = BrandData.toJSON(message.brand);
     }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
+    }
     return obj;
   },
 };
@@ -8100,6 +8407,8 @@ function createBaseFuture(): Future {
     initialMarginOnSell: undefined,
     minPriceIncrementAmount: undefined,
     brand: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -8236,6 +8545,12 @@ export const Future = {
     }
     if (message.brand !== undefined) {
       BrandData.encode(message.brand, writer.uint32(514).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -8555,6 +8870,20 @@ export const Future = {
 
           message.brand = BrandData.decode(reader, reader.uint32());
           continue;
+        case 90:
+          if (tag !== 722) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8620,6 +8949,8 @@ export const Future = {
         ? Quotation.fromJSON(object.minPriceIncrementAmount)
         : undefined,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -8757,6 +9088,12 @@ export const Future = {
     if (message.brand !== undefined) {
       obj.brand = BrandData.toJSON(message.brand);
     }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
+    }
     return obj;
   },
 };
@@ -8806,6 +9143,8 @@ function createBaseShare(): Share {
     first1minCandleDate: undefined,
     first1dayCandleDate: undefined,
     brand: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -8939,6 +9278,12 @@ export const Share = {
     }
     if (message.brand !== undefined) {
       BrandData.encode(message.brand, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(722).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(730).fork()).ldelim();
     }
     return writer;
   },
@@ -9251,6 +9596,20 @@ export const Share = {
 
           message.brand = BrandData.decode(reader, reader.uint32());
           continue;
+        case 90:
+          if (tag !== 722) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 91:
+          if (tag !== 730) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9313,6 +9672,8 @@ export const Share = {
         ? fromJsonTimestamp(object.first1dayCandleDate)
         : undefined,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -9446,6 +9807,12 @@ export const Share = {
     }
     if (message.brand !== undefined) {
       obj.brand = BrandData.toJSON(message.brand);
+    }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
     }
     return obj;
   },
@@ -9938,6 +10305,8 @@ function createBaseInstrument(): Instrument {
     first1minCandleDate: undefined,
     first1dayCandleDate: undefined,
     brand: undefined,
+    dlongClient: undefined,
+    dshortClient: undefined,
   };
 }
 
@@ -10050,6 +10419,12 @@ export const Instrument = {
     }
     if (message.brand !== undefined) {
       BrandData.encode(message.brand, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.dlongClient !== undefined) {
+      Quotation.encode(message.dlongClient, writer.uint32(3922).fork()).ldelim();
+    }
+    if (message.dshortClient !== undefined) {
+      Quotation.encode(message.dshortClient, writer.uint32(3930).fork()).ldelim();
     }
     return writer;
   },
@@ -10313,6 +10688,20 @@ export const Instrument = {
 
           message.brand = BrandData.decode(reader, reader.uint32());
           continue;
+        case 490:
+          if (tag !== 3922) {
+            break;
+          }
+
+          message.dlongClient = Quotation.decode(reader, reader.uint32());
+          continue;
+        case 491:
+          if (tag !== 3930) {
+            break;
+          }
+
+          message.dshortClient = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10366,6 +10755,8 @@ export const Instrument = {
         ? fromJsonTimestamp(object.first1dayCandleDate)
         : undefined,
       brand: isSet(object.brand) ? BrandData.fromJSON(object.brand) : undefined,
+      dlongClient: isSet(object.dlongClient) ? Quotation.fromJSON(object.dlongClient) : undefined,
+      dshortClient: isSet(object.dshortClient) ? Quotation.fromJSON(object.dshortClient) : undefined,
     };
   },
 
@@ -10478,6 +10869,12 @@ export const Instrument = {
     }
     if (message.brand !== undefined) {
       obj.brand = BrandData.toJSON(message.brand);
+    }
+    if (message.dlongClient !== undefined) {
+      obj.dlongClient = Quotation.toJSON(message.dlongClient);
+    }
+    if (message.dshortClient !== undefined) {
+      obj.dshortClient = Quotation.toJSON(message.dshortClient);
     }
     return obj;
   },
@@ -14477,6 +14874,7 @@ function createBaseInstrumentShort(): InstrumentShort {
     forQualInvestorFlag: false,
     weekendFlag: false,
     blockedTcaFlag: false,
+    lot: 0,
   };
 }
 
@@ -14529,6 +14927,9 @@ export const InstrumentShort = {
     }
     if (message.blockedTcaFlag === true) {
       writer.uint32(240).bool(message.blockedTcaFlag);
+    }
+    if (message.lot !== 0) {
+      writer.uint32(248).int32(message.lot);
     }
     return writer;
   },
@@ -14652,6 +15053,13 @@ export const InstrumentShort = {
 
           message.blockedTcaFlag = reader.bool();
           continue;
+        case 31:
+          if (tag !== 248) {
+            break;
+          }
+
+          message.lot = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14685,6 +15093,7 @@ export const InstrumentShort = {
       forQualInvestorFlag: isSet(object.forQualInvestorFlag) ? globalThis.Boolean(object.forQualInvestorFlag) : false,
       weekendFlag: isSet(object.weekendFlag) ? globalThis.Boolean(object.weekendFlag) : false,
       blockedTcaFlag: isSet(object.blockedTcaFlag) ? globalThis.Boolean(object.blockedTcaFlag) : false,
+      lot: isSet(object.lot) ? globalThis.Number(object.lot) : 0,
     };
   },
 
@@ -14737,6 +15146,9 @@ export const InstrumentShort = {
     }
     if (message.blockedTcaFlag === true) {
       obj.blockedTcaFlag = message.blockedTcaFlag;
+    }
+    if (message.lot !== 0) {
+      obj.lot = Math.round(message.lot);
     }
     return obj;
   },

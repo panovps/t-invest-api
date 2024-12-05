@@ -4,6 +4,8 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import {
   Ping,
+  PingDelaySettings,
+  PingRequest,
   Quotation,
   SecurityTradingStatus,
   securityTradingStatusFromJSON,
@@ -198,6 +200,8 @@ export enum SubscriptionStatus {
   SUBSCRIPTION_STATUS_TOO_MANY_REQUESTS = 8,
   /** SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND - Активная подписка не найдена. Ошибка может возникнуть только при отписке от несуществующей подписки. */
   SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND = 9,
+  /** SUBSCRIPTION_STATUS_SOURCE_IS_INVALID - Указан некорректный источник */
+  SUBSCRIPTION_STATUS_SOURCE_IS_INVALID = 10,
   UNRECOGNIZED = -1,
 }
 
@@ -233,6 +237,9 @@ export function subscriptionStatusFromJSON(object: any): SubscriptionStatus {
     case 9:
     case "SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND":
       return SubscriptionStatus.SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND;
+    case 10:
+    case "SUBSCRIPTION_STATUS_SOURCE_IS_INVALID":
+      return SubscriptionStatus.SUBSCRIPTION_STATUS_SOURCE_IS_INVALID;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -262,15 +269,17 @@ export function subscriptionStatusToJSON(object: SubscriptionStatus): string {
       return "SUBSCRIPTION_STATUS_TOO_MANY_REQUESTS";
     case SubscriptionStatus.SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND:
       return "SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND";
+    case SubscriptionStatus.SUBSCRIPTION_STATUS_SOURCE_IS_INVALID:
+      return "SUBSCRIPTION_STATUS_SOURCE_IS_INVALID";
     case SubscriptionStatus.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-/** Источники сделок. */
+/** Типы источников сделок. */
 export enum TradeSourceType {
-  /** TRADE_SOURCE_UNSPECIFIED - Тип сделки не определён. */
+  /** TRADE_SOURCE_UNSPECIFIED - Тип источника сделки не определён. */
   TRADE_SOURCE_UNSPECIFIED = 0,
   /** TRADE_SOURCE_EXCHANGE - Биржевые сделки. */
   TRADE_SOURCE_EXCHANGE = 1,
@@ -361,35 +370,35 @@ export function tradeDirectionToJSON(object: TradeDirection): string {
   }
 }
 
-/** Интервал свечей. */
+/** Интервал свечей. Максимальное значение интервала приведено ориентировочно, может отличаться в большую сторону в зависимости от параметров запроса. */
 export enum CandleInterval {
   /** CANDLE_INTERVAL_UNSPECIFIED - Интервал не определён. */
   CANDLE_INTERVAL_UNSPECIFIED = 0,
-  /** CANDLE_INTERVAL_1_MIN - От 1 минуты до 1 дня. */
+  /** CANDLE_INTERVAL_1_MIN - От 1 минуты до 1 дня (лимит 2400). */
   CANDLE_INTERVAL_1_MIN = 1,
-  /** CANDLE_INTERVAL_5_MIN - От 5 минут до 1 дня. */
+  /** CANDLE_INTERVAL_5_MIN - От 5 минут до недели (лимит 2400). */
   CANDLE_INTERVAL_5_MIN = 2,
-  /** CANDLE_INTERVAL_15_MIN - От 15 минут до 1 дня. */
+  /** CANDLE_INTERVAL_15_MIN - От 15 минут до 3 недель (лимит 2400). */
   CANDLE_INTERVAL_15_MIN = 3,
-  /** CANDLE_INTERVAL_HOUR - От 1 часа до 1 недели. */
+  /** CANDLE_INTERVAL_HOUR - От 1 часа до 3 месяцев (лимит 2400). */
   CANDLE_INTERVAL_HOUR = 4,
-  /** CANDLE_INTERVAL_DAY - От 1 дня до 1 года. */
+  /** CANDLE_INTERVAL_DAY - От 1 дня до 6 лет (лимит 2400). */
   CANDLE_INTERVAL_DAY = 5,
-  /** CANDLE_INTERVAL_2_MIN - От 2 минут до 1 дня. */
+  /** CANDLE_INTERVAL_2_MIN - От 2 минут до 1 дня (лимит 1200). */
   CANDLE_INTERVAL_2_MIN = 6,
-  /** CANDLE_INTERVAL_3_MIN - От 3 минут до 1 дня. */
+  /** CANDLE_INTERVAL_3_MIN - От 3 минут до 1 дня (лимит 750). */
   CANDLE_INTERVAL_3_MIN = 7,
-  /** CANDLE_INTERVAL_10_MIN - От 10 минут до 1 дня. */
+  /** CANDLE_INTERVAL_10_MIN - От 10 минут до недели (лимит 1200). */
   CANDLE_INTERVAL_10_MIN = 8,
-  /** CANDLE_INTERVAL_30_MIN - От 30 минут до 2 дней. */
+  /** CANDLE_INTERVAL_30_MIN - От 30 минут до 3 недель (лимит 1200). */
   CANDLE_INTERVAL_30_MIN = 9,
-  /** CANDLE_INTERVAL_2_HOUR - От 2 часов до 1 месяца. */
+  /** CANDLE_INTERVAL_2_HOUR - От 2 часов до 3 месяцев (лимит 2400). */
   CANDLE_INTERVAL_2_HOUR = 10,
-  /** CANDLE_INTERVAL_4_HOUR - От 4 часов до 1 месяца. */
+  /** CANDLE_INTERVAL_4_HOUR - От 4 часов до 3 месяцев (лимит 700). */
   CANDLE_INTERVAL_4_HOUR = 11,
-  /** CANDLE_INTERVAL_WEEK - От 1 недели до 2 лет. */
+  /** CANDLE_INTERVAL_WEEK - От 1 недели до 5 лет (лимит 300). */
   CANDLE_INTERVAL_WEEK = 12,
-  /** CANDLE_INTERVAL_MONTH - От 1 месяца до 10 лет. */
+  /** CANDLE_INTERVAL_MONTH - От 1 месяца до 10 лет (лимит 120). */
   CANDLE_INTERVAL_MONTH = 13,
   UNRECOGNIZED = -1,
 }
@@ -530,6 +539,8 @@ export enum OrderBookType {
   ORDERBOOK_TYPE_EXCHANGE = 1,
   /** ORDERBOOK_TYPE_DEALER - Стакан дилера. */
   ORDERBOOK_TYPE_DEALER = 2,
+  /** ORDERBOOK_TYPE_ALL - Стакан биржевой и дилера. */
+  ORDERBOOK_TYPE_ALL = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -544,6 +555,9 @@ export function orderBookTypeFromJSON(object: any): OrderBookType {
     case 2:
     case "ORDERBOOK_TYPE_DEALER":
       return OrderBookType.ORDERBOOK_TYPE_DEALER;
+    case 3:
+    case "ORDERBOOK_TYPE_ALL":
+      return OrderBookType.ORDERBOOK_TYPE_ALL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -559,6 +573,8 @@ export function orderBookTypeToJSON(object: OrderBookType): string {
       return "ORDERBOOK_TYPE_EXCHANGE";
     case OrderBookType.ORDERBOOK_TYPE_DEALER:
       return "ORDERBOOK_TYPE_DEALER";
+    case OrderBookType.ORDERBOOK_TYPE_ALL:
+      return "ORDERBOOK_TYPE_ALL";
     case OrderBookType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -631,7 +647,15 @@ export interface MarketDataRequest {
     | SubscribeLastPriceRequest
     | undefined;
   /** Запрос своих подписок. */
-  getMySubscriptions?: GetMySubscriptions | undefined;
+  getMySubscriptions?:
+    | GetMySubscriptions
+    | undefined;
+  /** Запрос проверки активности соединения. */
+  ping?:
+    | PingRequest
+    | undefined;
+  /** Запрос настройки пинга. */
+  pingSettings?: PingDelaySettings | undefined;
 }
 
 export interface MarketDataServerSideStreamRequest {
@@ -652,7 +676,11 @@ export interface MarketDataServerSideStreamRequest {
     | SubscribeInfoRequest
     | undefined;
   /** Запрос подписки на цены последних сделок. */
-  subscribeLastPriceRequest?: SubscribeLastPriceRequest | undefined;
+  subscribeLastPriceRequest?:
+    | SubscribeLastPriceRequest
+    | undefined;
+  /** Запрос настройки пинга. */
+  pingSettings?: PingDelaySettings | undefined;
 }
 
 /** Пакет биржевой информации по подписке. */
@@ -709,6 +737,8 @@ export interface SubscribeCandlesRequest {
   instruments: CandleInstrument[];
   /** Флаг ожидания закрытия временного интервала для отправки свечи. */
   waitingClose: boolean;
+  /** Источник свечей. */
+  candleSourceType?: GetCandlesRequest_CandleSource | undefined;
 }
 
 /** Запрос изменения статус подписки на свечи. */
@@ -749,6 +779,8 @@ export interface CandleSubscription {
   streamId: string;
   /** Идентификатор подписки в формате `UUID`. */
   subscriptionId: string;
+  /** Источник свечей. */
+  candleSourceType?: GetCandlesRequest_CandleSource | undefined;
 }
 
 /** Запрос на изменение статуса подписки на стаканы. */
@@ -771,7 +803,7 @@ export interface OrderBookInstrument {
   depth: number;
   /** Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`. */
   instrumentId: string;
-  /** Тип стакана. */
+  /** Тип стакана. По умолчанию ORDERBOOK_TYPE_ALL - стакан биржевой и дилера. */
   orderBookType: OrderBookType;
 }
 
@@ -807,8 +839,8 @@ export interface SubscribeTradesRequest {
   subscriptionAction: SubscriptionAction;
   /** Массив инструментов для подписки на поток обезличенных сделок. */
   instruments: TradeInstrument[];
-  /** Источник сделок. */
-  tradeType: TradeSourceType;
+  /** Тип источника сделок. По умолчанию TRADE_SOURCE_ALL - все сделки. */
+  tradeSource: TradeSourceType;
 }
 
 /** Запрос подписки на поток обезличенных сделок. */
@@ -829,8 +861,8 @@ export interface SubscribeTradesResponse {
   trackingId: string;
   /** Массив статусов подписки на поток сделок. */
   tradeSubscriptions: TradeSubscription[];
-  /** Источник сделок. */
-  tradeType: TradeSourceType;
+  /** Тип источника сделок. */
+  tradeSource: TradeSourceType;
 }
 
 /** Статус подписки. */
@@ -965,6 +997,8 @@ export interface Candle {
     | undefined;
   /** UID инструмента. */
   instrumentUid: string;
+  /** Источник свечей */
+  candleSourceType: CandleSource;
 }
 
 /** Пакет стаканов в рамках стрима. */
@@ -1025,7 +1059,7 @@ export interface Trade {
     | undefined;
   /** UID инструмента. */
   instrumentUid: string;
-  /** Источник сделки. */
+  /** Тип источника сделки. */
   tradeSource: TradeSourceType;
 }
 
@@ -1154,7 +1188,7 @@ export interface HistoricCandle {
   /** Признак завершённости свечи. **false** — свеча за текущие интервал ещё сформирована не полностью. */
   isComplete: boolean;
   /** Тип источника свечи */
-  candleSource: CandleSource;
+  candleSourceType: CandleSource;
 }
 
 /** Запрос получения цен последних сделок. */
@@ -1318,7 +1352,11 @@ export interface GetLastTradesRequest {
     | Date
     | undefined;
   /** Идентификатор инструмента. Принимает значение `figi` или `instrument_uid`. */
-  instrumentId?: string | undefined;
+  instrumentId?:
+    | string
+    | undefined;
+  /** Тип источника сделок. По умолчанию TRADE_SOURCE_ALL - все сделки. */
+  tradeSource: TradeSourceType;
 }
 
 /** Обезличенных сделок за последний час. */
@@ -1696,6 +1734,8 @@ function createBaseMarketDataRequest(): MarketDataRequest {
     subscribeInfoRequest: undefined,
     subscribeLastPriceRequest: undefined,
     getMySubscriptions: undefined,
+    ping: undefined,
+    pingSettings: undefined,
   };
 }
 
@@ -1718,6 +1758,12 @@ export const MarketDataRequest = {
     }
     if (message.getMySubscriptions !== undefined) {
       GetMySubscriptions.encode(message.getMySubscriptions, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.ping !== undefined) {
+      PingRequest.encode(message.ping, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.pingSettings !== undefined) {
+      PingDelaySettings.encode(message.pingSettings, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -1771,6 +1817,20 @@ export const MarketDataRequest = {
 
           message.getMySubscriptions = GetMySubscriptions.decode(reader, reader.uint32());
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.ping = PingRequest.decode(reader, reader.uint32());
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.pingSettings = PingDelaySettings.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1800,6 +1860,8 @@ export const MarketDataRequest = {
       getMySubscriptions: isSet(object.getMySubscriptions)
         ? GetMySubscriptions.fromJSON(object.getMySubscriptions)
         : undefined,
+      ping: isSet(object.ping) ? PingRequest.fromJSON(object.ping) : undefined,
+      pingSettings: isSet(object.pingSettings) ? PingDelaySettings.fromJSON(object.pingSettings) : undefined,
     };
   },
 
@@ -1823,6 +1885,12 @@ export const MarketDataRequest = {
     if (message.getMySubscriptions !== undefined) {
       obj.getMySubscriptions = GetMySubscriptions.toJSON(message.getMySubscriptions);
     }
+    if (message.ping !== undefined) {
+      obj.ping = PingRequest.toJSON(message.ping);
+    }
+    if (message.pingSettings !== undefined) {
+      obj.pingSettings = PingDelaySettings.toJSON(message.pingSettings);
+    }
     return obj;
   },
 };
@@ -1834,6 +1902,7 @@ function createBaseMarketDataServerSideStreamRequest(): MarketDataServerSideStre
     subscribeTradesRequest: undefined,
     subscribeInfoRequest: undefined,
     subscribeLastPriceRequest: undefined,
+    pingSettings: undefined,
   };
 }
 
@@ -1853,6 +1922,9 @@ export const MarketDataServerSideStreamRequest = {
     }
     if (message.subscribeLastPriceRequest !== undefined) {
       SubscribeLastPriceRequest.encode(message.subscribeLastPriceRequest, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.pingSettings !== undefined) {
+      PingDelaySettings.encode(message.pingSettings, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -1899,6 +1971,13 @@ export const MarketDataServerSideStreamRequest = {
 
           message.subscribeLastPriceRequest = SubscribeLastPriceRequest.decode(reader, reader.uint32());
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.pingSettings = PingDelaySettings.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1925,6 +2004,7 @@ export const MarketDataServerSideStreamRequest = {
       subscribeLastPriceRequest: isSet(object.subscribeLastPriceRequest)
         ? SubscribeLastPriceRequest.fromJSON(object.subscribeLastPriceRequest)
         : undefined,
+      pingSettings: isSet(object.pingSettings) ? PingDelaySettings.fromJSON(object.pingSettings) : undefined,
     };
   },
 
@@ -1944,6 +2024,9 @@ export const MarketDataServerSideStreamRequest = {
     }
     if (message.subscribeLastPriceRequest !== undefined) {
       obj.subscribeLastPriceRequest = SubscribeLastPriceRequest.toJSON(message.subscribeLastPriceRequest);
+    }
+    if (message.pingSettings !== undefined) {
+      obj.pingSettings = PingDelaySettings.toJSON(message.pingSettings);
     }
     return obj;
   },
@@ -2162,7 +2245,7 @@ export const MarketDataResponse = {
 };
 
 function createBaseSubscribeCandlesRequest(): SubscribeCandlesRequest {
-  return { subscriptionAction: 0, instruments: [], waitingClose: false };
+  return { subscriptionAction: 0, instruments: [], waitingClose: false, candleSourceType: undefined };
 }
 
 export const SubscribeCandlesRequest = {
@@ -2175,6 +2258,9 @@ export const SubscribeCandlesRequest = {
     }
     if (message.waitingClose === true) {
       writer.uint32(24).bool(message.waitingClose);
+    }
+    if (message.candleSourceType !== undefined) {
+      writer.uint32(72).int32(message.candleSourceType);
     }
     return writer;
   },
@@ -2207,6 +2293,13 @@ export const SubscribeCandlesRequest = {
 
           message.waitingClose = reader.bool();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.candleSourceType = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2223,6 +2316,9 @@ export const SubscribeCandlesRequest = {
         ? object.instruments.map((e: any) => CandleInstrument.fromJSON(e))
         : [],
       waitingClose: isSet(object.waitingClose) ? globalThis.Boolean(object.waitingClose) : false,
+      candleSourceType: isSet(object.candleSourceType)
+        ? getCandlesRequest_CandleSourceFromJSON(object.candleSourceType)
+        : undefined,
     };
   },
 
@@ -2236,6 +2332,9 @@ export const SubscribeCandlesRequest = {
     }
     if (message.waitingClose === true) {
       obj.waitingClose = message.waitingClose;
+    }
+    if (message.candleSourceType !== undefined) {
+      obj.candleSourceType = getCandlesRequest_CandleSourceToJSON(message.candleSourceType);
     }
     return obj;
   },
@@ -2394,6 +2493,7 @@ function createBaseCandleSubscription(): CandleSubscription {
     waitingClose: false,
     streamId: "",
     subscriptionId: "",
+    candleSourceType: undefined,
   };
 }
 
@@ -2419,6 +2519,9 @@ export const CandleSubscription = {
     }
     if (message.subscriptionId !== "") {
       writer.uint32(58).string(message.subscriptionId);
+    }
+    if (message.candleSourceType !== undefined) {
+      writer.uint32(72).int32(message.candleSourceType);
     }
     return writer;
   },
@@ -2479,6 +2582,13 @@ export const CandleSubscription = {
 
           message.subscriptionId = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.candleSourceType = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2497,6 +2607,9 @@ export const CandleSubscription = {
       waitingClose: isSet(object.waitingClose) ? globalThis.Boolean(object.waitingClose) : false,
       streamId: isSet(object.streamId) ? globalThis.String(object.streamId) : "",
       subscriptionId: isSet(object.subscriptionId) ? globalThis.String(object.subscriptionId) : "",
+      candleSourceType: isSet(object.candleSourceType)
+        ? getCandlesRequest_CandleSourceFromJSON(object.candleSourceType)
+        : undefined,
     };
   },
 
@@ -2522,6 +2635,9 @@ export const CandleSubscription = {
     }
     if (message.subscriptionId !== "") {
       obj.subscriptionId = message.subscriptionId;
+    }
+    if (message.candleSourceType !== undefined) {
+      obj.candleSourceType = getCandlesRequest_CandleSourceToJSON(message.candleSourceType);
     }
     return obj;
   },
@@ -2894,7 +3010,7 @@ export const OrderBookSubscription = {
 };
 
 function createBaseSubscribeTradesRequest(): SubscribeTradesRequest {
-  return { subscriptionAction: 0, instruments: [], tradeType: 0 };
+  return { subscriptionAction: 0, instruments: [], tradeSource: 0 };
 }
 
 export const SubscribeTradesRequest = {
@@ -2905,8 +3021,8 @@ export const SubscribeTradesRequest = {
     for (const v of message.instruments) {
       TradeInstrument.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.tradeType !== 0) {
-      writer.uint32(24).int32(message.tradeType);
+    if (message.tradeSource !== 0) {
+      writer.uint32(24).int32(message.tradeSource);
     }
     return writer;
   },
@@ -2937,7 +3053,7 @@ export const SubscribeTradesRequest = {
             break;
           }
 
-          message.tradeType = reader.int32() as any;
+          message.tradeSource = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2954,7 +3070,7 @@ export const SubscribeTradesRequest = {
       instruments: globalThis.Array.isArray(object?.instruments)
         ? object.instruments.map((e: any) => TradeInstrument.fromJSON(e))
         : [],
-      tradeType: isSet(object.tradeType) ? tradeSourceTypeFromJSON(object.tradeType) : 0,
+      tradeSource: isSet(object.tradeSource) ? tradeSourceTypeFromJSON(object.tradeSource) : 0,
     };
   },
 
@@ -2966,8 +3082,8 @@ export const SubscribeTradesRequest = {
     if (message.instruments?.length) {
       obj.instruments = message.instruments.map((e) => TradeInstrument.toJSON(e));
     }
-    if (message.tradeType !== 0) {
-      obj.tradeType = tradeSourceTypeToJSON(message.tradeType);
+    if (message.tradeSource !== 0) {
+      obj.tradeSource = tradeSourceTypeToJSON(message.tradeSource);
     }
     return obj;
   },
@@ -3038,7 +3154,7 @@ export const TradeInstrument = {
 };
 
 function createBaseSubscribeTradesResponse(): SubscribeTradesResponse {
-  return { trackingId: "", tradeSubscriptions: [], tradeType: 0 };
+  return { trackingId: "", tradeSubscriptions: [], tradeSource: 0 };
 }
 
 export const SubscribeTradesResponse = {
@@ -3049,8 +3165,8 @@ export const SubscribeTradesResponse = {
     for (const v of message.tradeSubscriptions) {
       TradeSubscription.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.tradeType !== 0) {
-      writer.uint32(24).int32(message.tradeType);
+    if (message.tradeSource !== 0) {
+      writer.uint32(24).int32(message.tradeSource);
     }
     return writer;
   },
@@ -3081,7 +3197,7 @@ export const SubscribeTradesResponse = {
             break;
           }
 
-          message.tradeType = reader.int32() as any;
+          message.tradeSource = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -3098,7 +3214,7 @@ export const SubscribeTradesResponse = {
       tradeSubscriptions: globalThis.Array.isArray(object?.tradeSubscriptions)
         ? object.tradeSubscriptions.map((e: any) => TradeSubscription.fromJSON(e))
         : [],
-      tradeType: isSet(object.tradeType) ? tradeSourceTypeFromJSON(object.tradeType) : 0,
+      tradeSource: isSet(object.tradeSource) ? tradeSourceTypeFromJSON(object.tradeSource) : 0,
     };
   },
 
@@ -3110,8 +3226,8 @@ export const SubscribeTradesResponse = {
     if (message.tradeSubscriptions?.length) {
       obj.tradeSubscriptions = message.tradeSubscriptions.map((e) => TradeSubscription.toJSON(e));
     }
-    if (message.tradeType !== 0) {
-      obj.tradeType = tradeSourceTypeToJSON(message.tradeType);
+    if (message.tradeSource !== 0) {
+      obj.tradeSource = tradeSourceTypeToJSON(message.tradeSource);
     }
     return obj;
   },
@@ -3839,6 +3955,7 @@ function createBaseCandle(): Candle {
     time: undefined,
     lastTradeTs: undefined,
     instrumentUid: "",
+    candleSourceType: 0,
   };
 }
 
@@ -3873,6 +3990,9 @@ export const Candle = {
     }
     if (message.instrumentUid !== "") {
       writer.uint32(82).string(message.instrumentUid);
+    }
+    if (message.candleSourceType !== 0) {
+      writer.uint32(152).int32(message.candleSourceType);
     }
     return writer;
   },
@@ -3954,6 +4074,13 @@ export const Candle = {
 
           message.instrumentUid = reader.string();
           continue;
+        case 19:
+          if (tag !== 152) {
+            break;
+          }
+
+          message.candleSourceType = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3975,6 +4102,7 @@ export const Candle = {
       time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
       lastTradeTs: isSet(object.lastTradeTs) ? fromJsonTimestamp(object.lastTradeTs) : undefined,
       instrumentUid: isSet(object.instrumentUid) ? globalThis.String(object.instrumentUid) : "",
+      candleSourceType: isSet(object.candleSourceType) ? candleSourceFromJSON(object.candleSourceType) : 0,
     };
   },
 
@@ -4009,6 +4137,9 @@ export const Candle = {
     }
     if (message.instrumentUid !== "") {
       obj.instrumentUid = message.instrumentUid;
+    }
+    if (message.candleSourceType !== 0) {
+      obj.candleSourceType = candleSourceToJSON(message.candleSourceType);
     }
     return obj;
   },
@@ -4735,7 +4866,7 @@ function createBaseHistoricCandle(): HistoricCandle {
     volume: 0,
     time: undefined,
     isComplete: false,
-    candleSource: 0,
+    candleSourceType: 0,
   };
 }
 
@@ -4762,8 +4893,8 @@ export const HistoricCandle = {
     if (message.isComplete === true) {
       writer.uint32(56).bool(message.isComplete);
     }
-    if (message.candleSource !== 0) {
-      writer.uint32(72).int32(message.candleSource);
+    if (message.candleSourceType !== 0) {
+      writer.uint32(72).int32(message.candleSourceType);
     }
     return writer;
   },
@@ -4829,7 +4960,7 @@ export const HistoricCandle = {
             break;
           }
 
-          message.candleSource = reader.int32() as any;
+          message.candleSourceType = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4849,7 +4980,7 @@ export const HistoricCandle = {
       volume: isSet(object.volume) ? globalThis.Number(object.volume) : 0,
       time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
       isComplete: isSet(object.isComplete) ? globalThis.Boolean(object.isComplete) : false,
-      candleSource: isSet(object.candleSource) ? candleSourceFromJSON(object.candleSource) : 0,
+      candleSourceType: isSet(object.candleSourceType) ? candleSourceFromJSON(object.candleSourceType) : 0,
     };
   },
 
@@ -4876,8 +5007,8 @@ export const HistoricCandle = {
     if (message.isComplete === true) {
       obj.isComplete = message.isComplete;
     }
-    if (message.candleSource !== 0) {
-      obj.candleSource = candleSourceToJSON(message.candleSource);
+    if (message.candleSourceType !== 0) {
+      obj.candleSourceType = candleSourceToJSON(message.candleSourceType);
     }
     return obj;
   },
@@ -5750,7 +5881,7 @@ export const GetTradingStatusResponse = {
 };
 
 function createBaseGetLastTradesRequest(): GetLastTradesRequest {
-  return { figi: undefined, from: undefined, to: undefined, instrumentId: undefined };
+  return { figi: undefined, from: undefined, to: undefined, instrumentId: undefined, tradeSource: 0 };
 }
 
 export const GetLastTradesRequest = {
@@ -5766,6 +5897,9 @@ export const GetLastTradesRequest = {
     }
     if (message.instrumentId !== undefined) {
       writer.uint32(34).string(message.instrumentId);
+    }
+    if (message.tradeSource !== 0) {
+      writer.uint32(40).int32(message.tradeSource);
     }
     return writer;
   },
@@ -5805,6 +5939,13 @@ export const GetLastTradesRequest = {
 
           message.instrumentId = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.tradeSource = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5820,6 +5961,7 @@ export const GetLastTradesRequest = {
       from: isSet(object.from) ? fromJsonTimestamp(object.from) : undefined,
       to: isSet(object.to) ? fromJsonTimestamp(object.to) : undefined,
       instrumentId: isSet(object.instrumentId) ? globalThis.String(object.instrumentId) : undefined,
+      tradeSource: isSet(object.tradeSource) ? tradeSourceTypeFromJSON(object.tradeSource) : 0,
     };
   },
 
@@ -5836,6 +5978,9 @@ export const GetLastTradesRequest = {
     }
     if (message.instrumentId !== undefined) {
       obj.instrumentId = message.instrumentId;
+    }
+    if (message.tradeSource !== 0) {
+      obj.tradeSource = tradeSourceTypeToJSON(message.tradeSource);
     }
     return obj;
   },

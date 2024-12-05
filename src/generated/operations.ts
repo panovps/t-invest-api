@@ -2,7 +2,15 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { InstrumentType, instrumentTypeFromJSON, instrumentTypeToJSON, MoneyValue, Ping, Quotation } from "./common";
+import {
+  InstrumentType,
+  instrumentTypeFromJSON,
+  instrumentTypeToJSON,
+  MoneyValue,
+  Ping,
+  PingDelaySettings,
+  Quotation,
+} from "./common";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "tinkoff.public.invest.api.contract.v1";
@@ -800,6 +808,12 @@ export interface PortfolioResponse {
     | undefined;
   /** Массив виртуальных позиций портфеля. */
   virtualPositions: VirtualPortfolioPosition[];
+  /** Рассчитанная доходность портфеля за день в рублях */
+  dailyYield?:
+    | MoneyValue
+    | undefined;
+  /** Относительная доходность в день в % */
+  dailyYieldRelative?: Quotation | undefined;
 }
 
 /** Запрос позиций портфеля по счёту. */
@@ -822,6 +836,8 @@ export interface PositionsResponse {
   futures: PositionsFutures[];
   /** Список опционов портфеля. */
   options: PositionsOptions[];
+  /** Идентификатор счёта пользователя. */
+  accountId: string;
 }
 
 /** Запрос доступного остатка для вывода. */
@@ -901,7 +917,11 @@ export interface PortfolioPosition {
     | MoneyValue
     | undefined;
   /** Текущая рассчитанная доходность позиции. */
-  expectedYieldFifo?: Quotation | undefined;
+  expectedYieldFifo?:
+    | Quotation
+    | undefined;
+  /** Рассчитанная доходность портфеля за день */
+  dailyYield?: MoneyValue | undefined;
 }
 
 export interface VirtualPortfolioPosition {
@@ -938,7 +958,11 @@ export interface VirtualPortfolioPosition {
     | MoneyValue
     | undefined;
   /** Средняя цена позиции по методу FIFO. Для пересчёта возможна задержка до одной секунды. */
-  averagePositionPriceFifo?: MoneyValue | undefined;
+  averagePositionPriceFifo?:
+    | MoneyValue
+    | undefined;
+  /** Рассчитанная доходность портфеля за день */
+  dailyYield?: MoneyValue | undefined;
 }
 
 /** Баланс позиции ценной бумаги. */
@@ -1207,6 +1231,8 @@ export interface DividendsForeignIssuerReport {
 export interface PortfolioStreamRequest {
   /** Массив идентификаторов счётов пользователя. */
   accounts: string[];
+  /** Запрос настройки пинга. */
+  pingSettings?: PingDelaySettings | undefined;
 }
 
 /** Информация по позициям и доходностям портфелей. */
@@ -1402,6 +1428,10 @@ export interface OperationItemTrade {
 export interface PositionsStreamRequest {
   /** Массив идентификаторов счётов пользователя. */
   accounts: string[];
+  /** Получение состояния позиций на момент подключения. */
+  withInitialPositions: boolean;
+  /** Запрос настройки пинга. */
+  pingSettings?: PingDelaySettings | undefined;
 }
 
 /** Информация по изменению позиций портфеля. */
@@ -1415,7 +1445,11 @@ export interface PositionsStreamResponse {
     | PositionData
     | undefined;
   /** Проверка активности стрима. */
-  ping?: Ping | undefined;
+  ping?:
+    | Ping
+    | undefined;
+  /** Текущие позиции. */
+  initialPositions?: PositionsResponse | undefined;
 }
 
 /** Объект результата подписки. */
@@ -2106,6 +2140,8 @@ function createBasePortfolioResponse(): PortfolioResponse {
     totalAmountSp: undefined,
     totalAmountPortfolio: undefined,
     virtualPositions: [],
+    dailyYield: undefined,
+    dailyYieldRelative: undefined,
   };
 }
 
@@ -2146,6 +2182,12 @@ export const PortfolioResponse = {
     }
     for (const v of message.virtualPositions) {
       VirtualPortfolioPosition.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
+    if (message.dailyYield !== undefined) {
+      MoneyValue.encode(message.dailyYield, writer.uint32(122).fork()).ldelim();
+    }
+    if (message.dailyYieldRelative !== undefined) {
+      Quotation.encode(message.dailyYieldRelative, writer.uint32(130).fork()).ldelim();
     }
     return writer;
   },
@@ -2241,6 +2283,20 @@ export const PortfolioResponse = {
 
           message.virtualPositions.push(VirtualPortfolioPosition.decode(reader, reader.uint32()));
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.dailyYield = MoneyValue.decode(reader, reader.uint32());
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.dailyYieldRelative = Quotation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2272,6 +2328,8 @@ export const PortfolioResponse = {
       virtualPositions: globalThis.Array.isArray(object?.virtualPositions)
         ? object.virtualPositions.map((e: any) => VirtualPortfolioPosition.fromJSON(e))
         : [],
+      dailyYield: isSet(object.dailyYield) ? MoneyValue.fromJSON(object.dailyYield) : undefined,
+      dailyYieldRelative: isSet(object.dailyYieldRelative) ? Quotation.fromJSON(object.dailyYieldRelative) : undefined,
     };
   },
 
@@ -2312,6 +2370,12 @@ export const PortfolioResponse = {
     }
     if (message.virtualPositions?.length) {
       obj.virtualPositions = message.virtualPositions.map((e) => VirtualPortfolioPosition.toJSON(e));
+    }
+    if (message.dailyYield !== undefined) {
+      obj.dailyYield = MoneyValue.toJSON(message.dailyYield);
+    }
+    if (message.dailyYieldRelative !== undefined) {
+      obj.dailyYieldRelative = Quotation.toJSON(message.dailyYieldRelative);
     }
     return obj;
   },
@@ -2366,7 +2430,15 @@ export const PositionsRequest = {
 };
 
 function createBasePositionsResponse(): PositionsResponse {
-  return { money: [], blocked: [], securities: [], limitsLoadingInProgress: false, futures: [], options: [] };
+  return {
+    money: [],
+    blocked: [],
+    securities: [],
+    limitsLoadingInProgress: false,
+    futures: [],
+    options: [],
+    accountId: "",
+  };
 }
 
 export const PositionsResponse = {
@@ -2388,6 +2460,9 @@ export const PositionsResponse = {
     }
     for (const v of message.options) {
       PositionsOptions.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.accountId !== "") {
+      writer.uint32(122).string(message.accountId);
     }
     return writer;
   },
@@ -2441,6 +2516,13 @@ export const PositionsResponse = {
 
           message.options.push(PositionsOptions.decode(reader, reader.uint32()));
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.accountId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2466,6 +2548,7 @@ export const PositionsResponse = {
       options: globalThis.Array.isArray(object?.options)
         ? object.options.map((e: any) => PositionsOptions.fromJSON(e))
         : [],
+      accountId: isSet(object.accountId) ? globalThis.String(object.accountId) : "",
     };
   },
 
@@ -2488,6 +2571,9 @@ export const PositionsResponse = {
     }
     if (message.options?.length) {
       obj.options = message.options.map((e) => PositionsOptions.toJSON(e));
+    }
+    if (message.accountId !== "") {
+      obj.accountId = message.accountId;
     }
     return obj;
   },
@@ -2639,6 +2725,7 @@ function createBasePortfolioPosition(): PortfolioPosition {
     instrumentUid: "",
     varMargin: undefined,
     expectedYieldFifo: undefined,
+    dailyYield: undefined,
   };
 }
 
@@ -2691,6 +2778,9 @@ export const PortfolioPosition = {
     }
     if (message.expectedYieldFifo !== undefined) {
       Quotation.encode(message.expectedYieldFifo, writer.uint32(218).fork()).ldelim();
+    }
+    if (message.dailyYield !== undefined) {
+      MoneyValue.encode(message.dailyYield, writer.uint32(250).fork()).ldelim();
     }
     return writer;
   },
@@ -2814,6 +2904,13 @@ export const PortfolioPosition = {
 
           message.expectedYieldFifo = Quotation.decode(reader, reader.uint32());
           continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.dailyYield = MoneyValue.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2847,6 +2944,7 @@ export const PortfolioPosition = {
       instrumentUid: isSet(object.instrumentUid) ? globalThis.String(object.instrumentUid) : "",
       varMargin: isSet(object.varMargin) ? MoneyValue.fromJSON(object.varMargin) : undefined,
       expectedYieldFifo: isSet(object.expectedYieldFifo) ? Quotation.fromJSON(object.expectedYieldFifo) : undefined,
+      dailyYield: isSet(object.dailyYield) ? MoneyValue.fromJSON(object.dailyYield) : undefined,
     };
   },
 
@@ -2900,6 +2998,9 @@ export const PortfolioPosition = {
     if (message.expectedYieldFifo !== undefined) {
       obj.expectedYieldFifo = Quotation.toJSON(message.expectedYieldFifo);
     }
+    if (message.dailyYield !== undefined) {
+      obj.dailyYield = MoneyValue.toJSON(message.dailyYield);
+    }
     return obj;
   },
 };
@@ -2917,6 +3018,7 @@ function createBaseVirtualPortfolioPosition(): VirtualPortfolioPosition {
     expireDate: undefined,
     currentPrice: undefined,
     averagePositionPriceFifo: undefined,
+    dailyYield: undefined,
   };
 }
 
@@ -2954,6 +3056,9 @@ export const VirtualPortfolioPosition = {
     }
     if (message.averagePositionPriceFifo !== undefined) {
       MoneyValue.encode(message.averagePositionPriceFifo, writer.uint32(90).fork()).ldelim();
+    }
+    if (message.dailyYield !== undefined) {
+      MoneyValue.encode(message.dailyYield, writer.uint32(250).fork()).ldelim();
     }
     return writer;
   },
@@ -3042,6 +3147,13 @@ export const VirtualPortfolioPosition = {
 
           message.averagePositionPriceFifo = MoneyValue.decode(reader, reader.uint32());
           continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.dailyYield = MoneyValue.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3068,6 +3180,7 @@ export const VirtualPortfolioPosition = {
       averagePositionPriceFifo: isSet(object.averagePositionPriceFifo)
         ? MoneyValue.fromJSON(object.averagePositionPriceFifo)
         : undefined,
+      dailyYield: isSet(object.dailyYield) ? MoneyValue.fromJSON(object.dailyYield) : undefined,
     };
   },
 
@@ -3105,6 +3218,9 @@ export const VirtualPortfolioPosition = {
     }
     if (message.averagePositionPriceFifo !== undefined) {
       obj.averagePositionPriceFifo = MoneyValue.toJSON(message.averagePositionPriceFifo);
+    }
+    if (message.dailyYield !== undefined) {
+      obj.dailyYield = MoneyValue.toJSON(message.dailyYield);
     }
     return obj;
   },
@@ -4973,13 +5089,16 @@ export const DividendsForeignIssuerReport = {
 };
 
 function createBasePortfolioStreamRequest(): PortfolioStreamRequest {
-  return { accounts: [] };
+  return { accounts: [], pingSettings: undefined };
 }
 
 export const PortfolioStreamRequest = {
   encode(message: PortfolioStreamRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.accounts) {
       writer.uint32(10).string(v!);
+    }
+    if (message.pingSettings !== undefined) {
+      PingDelaySettings.encode(message.pingSettings, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -4998,6 +5117,13 @@ export const PortfolioStreamRequest = {
 
           message.accounts.push(reader.string());
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.pingSettings = PingDelaySettings.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5010,6 +5136,7 @@ export const PortfolioStreamRequest = {
   fromJSON(object: any): PortfolioStreamRequest {
     return {
       accounts: globalThis.Array.isArray(object?.accounts) ? object.accounts.map((e: any) => globalThis.String(e)) : [],
+      pingSettings: isSet(object.pingSettings) ? PingDelaySettings.fromJSON(object.pingSettings) : undefined,
     };
   },
 
@@ -5017,6 +5144,9 @@ export const PortfolioStreamRequest = {
     const obj: any = {};
     if (message.accounts?.length) {
       obj.accounts = message.accounts;
+    }
+    if (message.pingSettings !== undefined) {
+      obj.pingSettings = PingDelaySettings.toJSON(message.pingSettings);
     }
     return obj;
   },
@@ -6174,13 +6304,19 @@ export const OperationItemTrade = {
 };
 
 function createBasePositionsStreamRequest(): PositionsStreamRequest {
-  return { accounts: [] };
+  return { accounts: [], withInitialPositions: false, pingSettings: undefined };
 }
 
 export const PositionsStreamRequest = {
   encode(message: PositionsStreamRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.accounts) {
       writer.uint32(10).string(v!);
+    }
+    if (message.withInitialPositions === true) {
+      writer.uint32(24).bool(message.withInitialPositions);
+    }
+    if (message.pingSettings !== undefined) {
+      PingDelaySettings.encode(message.pingSettings, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -6199,6 +6335,20 @@ export const PositionsStreamRequest = {
 
           message.accounts.push(reader.string());
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.withInitialPositions = reader.bool();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.pingSettings = PingDelaySettings.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6211,6 +6361,10 @@ export const PositionsStreamRequest = {
   fromJSON(object: any): PositionsStreamRequest {
     return {
       accounts: globalThis.Array.isArray(object?.accounts) ? object.accounts.map((e: any) => globalThis.String(e)) : [],
+      withInitialPositions: isSet(object.withInitialPositions)
+        ? globalThis.Boolean(object.withInitialPositions)
+        : false,
+      pingSettings: isSet(object.pingSettings) ? PingDelaySettings.fromJSON(object.pingSettings) : undefined,
     };
   },
 
@@ -6219,12 +6373,18 @@ export const PositionsStreamRequest = {
     if (message.accounts?.length) {
       obj.accounts = message.accounts;
     }
+    if (message.withInitialPositions === true) {
+      obj.withInitialPositions = message.withInitialPositions;
+    }
+    if (message.pingSettings !== undefined) {
+      obj.pingSettings = PingDelaySettings.toJSON(message.pingSettings);
+    }
     return obj;
   },
 };
 
 function createBasePositionsStreamResponse(): PositionsStreamResponse {
-  return { subscriptions: undefined, position: undefined, ping: undefined };
+  return { subscriptions: undefined, position: undefined, ping: undefined, initialPositions: undefined };
 }
 
 export const PositionsStreamResponse = {
@@ -6237,6 +6397,9 @@ export const PositionsStreamResponse = {
     }
     if (message.ping !== undefined) {
       Ping.encode(message.ping, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.initialPositions !== undefined) {
+      PositionsResponse.encode(message.initialPositions, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -6269,6 +6432,13 @@ export const PositionsStreamResponse = {
 
           message.ping = Ping.decode(reader, reader.uint32());
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.initialPositions = PositionsResponse.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6285,6 +6455,9 @@ export const PositionsStreamResponse = {
         : undefined,
       position: isSet(object.position) ? PositionData.fromJSON(object.position) : undefined,
       ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
+      initialPositions: isSet(object.initialPositions)
+        ? PositionsResponse.fromJSON(object.initialPositions)
+        : undefined,
     };
   },
 
@@ -6298,6 +6471,9 @@ export const PositionsStreamResponse = {
     }
     if (message.ping !== undefined) {
       obj.ping = Ping.toJSON(message.ping);
+    }
+    if (message.initialPositions !== undefined) {
+      obj.initialPositions = PositionsResponse.toJSON(message.initialPositions);
     }
     return obj;
   },
