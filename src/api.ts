@@ -20,6 +20,7 @@ import { OrdersServiceDefinition, OrdersStreamServiceDefinition } from './genera
 import { SandboxServiceDefinition } from './generated/sandbox.js';
 import { StopOrdersServiceDefinition } from './generated/stoporders.js';
 import { UsersServiceDefinition } from './generated/users.js';
+import { SignalServiceDefinition } from './generated/signals.js';
 import { TradesStream } from './stream/trades.js';
 
 export { TinkoffApiError };
@@ -53,7 +54,8 @@ type ServiceDefinition = typeof InstrumentsServiceDefinition
   | typeof OrdersStreamServiceDefinition
   | typeof SandboxServiceDefinition
   | typeof StopOrdersServiceDefinition
-  | typeof UsersServiceDefinition;
+  | typeof UsersServiceDefinition
+  | typeof SignalServiceDefinition;
 
 export class TinkoffInvestApi {
   options: TinkoffInvestApiOptions & typeof defaults;
@@ -78,6 +80,7 @@ export class TinkoffInvestApi {
   get sandbox() { return this.getOrCreateClient(SandboxServiceDefinition); }
   get stoporders() { return this.getOrCreateClient(StopOrdersServiceDefinition); }
   get users() { return this.getOrCreateClient(UsersServiceDefinition); }
+  get signals() { return this.getOrCreateClient(SignalServiceDefinition); }
   get stream() { return this.getOrCreateStream(); }
 
   isBacktest = false;
