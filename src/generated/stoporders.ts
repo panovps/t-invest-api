@@ -1,9 +1,9 @@
 /* eslint-disable */
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { MoneyValue, PriceType, priceTypeFromJSON, priceTypeToJSON, Quotation, ResponseMetadata } from "./common";
-import { Timestamp } from "./google/protobuf/timestamp";
+import _m0 from "protobufjs/minimal.js";
+import { MoneyValue, PriceType, priceTypeFromJSON, priceTypeToJSON, Quotation, ResponseMetadata } from "./common.js";
+import { Timestamp } from "./google/protobuf/timestamp.js";
 
 export const protobufPackage = "tinkoff.public.invest.api.contract.v1";
 

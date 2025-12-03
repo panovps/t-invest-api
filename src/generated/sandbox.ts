@@ -1,7 +1,7 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { MoneyValue } from "./common";
+import _m0 from "protobufjs/minimal.js";
+import { MoneyValue } from "./common.js";
 import {
   GetOperationsByCursorRequest,
   GetOperationsByCursorResponse,
@@ -13,7 +13,7 @@ import {
   PositionsResponse,
   WithdrawLimitsRequest,
   WithdrawLimitsResponse,
-} from "./operations";
+} from "./operations.js";
 import {
   CancelOrderRequest,
   CancelOrderResponse,
@@ -30,7 +30,7 @@ import {
   PostOrderRequest,
   PostOrderResponse,
   ReplaceOrderRequest,
-} from "./orders";
+} from "./orders.js";
 import {
   CancelStopOrderRequest,
   CancelStopOrderResponse,
@@ -38,8 +38,8 @@ import {
   GetStopOrdersResponse,
   PostStopOrderRequest,
   PostStopOrderResponse,
-} from "./stoporders";
-import { GetAccountsRequest, GetAccountsResponse } from "./users";
+} from "./stoporders.js";
+import { GetAccountsRequest, GetAccountsResponse } from "./users.js";
 
 export const protobufPackage = "tinkoff.public.invest.api.contract.v1";
 

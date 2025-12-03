@@ -5,7 +5,7 @@ import { TinkoffInvestApi } from '../api.js';
 import { OperationsRequest, PortfolioRequest_CurrencyRequest } from '../generated/operations.js';
 import { PostOrderRequest } from '../generated/orders.js';
 import { OmitAccount } from './types.js';
-import {PriceType} from "../generated/common";
+import {PriceType} from "../generated/common.js";
 
 export class RealAccount {
   constructor(public api: TinkoffInvestApi, public accountId: string) {}

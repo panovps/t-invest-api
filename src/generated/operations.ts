@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal.js";
 import {
   InstrumentType,
   instrumentTypeFromJSON,
@@ -10,8 +10,8 @@ import {
   Ping,
   PingDelaySettings,
   Quotation,
-} from "./common";
-import { Timestamp } from "./google/protobuf/timestamp";
+} from "./common.js";
+import { Timestamp } from "./google/protobuf/timestamp.js";
 
 export const protobufPackage = "tinkoff.public.invest.api.contract.v1";
 

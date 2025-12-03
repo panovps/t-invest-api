@@ -6,7 +6,7 @@ import { OperationsRequest, PortfolioRequest_CurrencyRequest } from '../generate
 import { PostOrderRequest } from '../generated/orders.js';
 import { SandboxPayInRequest } from '../generated/sandbox.js';
 import { OmitAccount, CommonAccountMethods } from './types.js';
-import {PriceType} from "../generated/common";
+import {PriceType} from "../generated/common.js";
 
 export class SandboxAccount implements CommonAccountMethods {
   constructor(public api: TinkoffInvestApi, public accountId: string) {}
